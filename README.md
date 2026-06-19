@@ -4,83 +4,73 @@
 
 ## 功能特性
 
-- **自适应布局** — 根据设备屏幕尺寸自动切换紧凑/展开布局
-- **多语言支持** — 支持简体中文与英文，应用内实时切换
+- **自适应布局** — 根据设备屏幕宽度自动切换紧凑/展开布局
+- **多语言支持** — 支持简体中文、英文与跟随系统，应用内实时切换
 - **主题切换** — 浅色 / 深色 / 跟随系统，运行时切换
-- **隐私政策** — 内置隐私政策页面，首次启动引导用户确认
-- **边缘到边缘** — 支持 Edge-to-Edge 显示，横屏自动隐藏系统栏
+- **边缘到边缘** — 支持 Edge-to-Edge 显示
+- **依赖注入** — 基于 Koin，零模板代码
+- **状态持久化** — DataStore 存储主题、语言等用户偏好
 
 ## 技术栈
 
 | 类别 | 技术 |
 |------|------|
-| 语言 | Kotlin 2.3 |
+| 语言 | Kotlin 2.4 |
 | UI | Jetpack Compose + Material 3 |
 | 架构 | MVVM + UDF（单向数据流） |
 | 依赖注入 | Koin 4.2 |
-| 导航 | Navigation 2.9 |
+| 导航 | Navigation 2.9 (类型安全) |
 | 状态管理 | DataStore 1.2 + StateFlow |
 | 异步处理 | Kotlin Coroutines + Flow |
 | 序列化 | Kotlin Serialization |
 | 自适应 | Material 3 Adaptive |
+| 构建 | AGP 9.2 + Gradle 9.6 |
 
 ## 环境要求
 
-- Android SDK：minSdk 32 / targetSdk 36
+- Android SDK：minSdk 32 / targetSdk 37 / compileSdk 37
 - JDK 21
-- Kotlin 2.3.21
+- Kotlin 2.4.0
 - AGP 9.2.1
+- Gradle 9.6.0
 
 ## 项目结构
 
 ```
 app/src/main/kotlin/com/template/jh/
-├── MainActivity.kt
-├── MyApplication.kt
+├── MainActivity.kt              # 主 Activity，Edge-to-Edge、主题/语言初始化
+├── MyApplication.kt             # 应用入口，Koin 初始化
 ├── core/
 │   └── utils/
 │       └── localization/
-│           └── LanguageManager.kt
+│           └── LanguageManager.kt      # 语言切换管理
 ├── data/
 │   └── repository/
-│       └── UserPreferencesRepository.kt
+│       └── UserPreferencesRepository.kt # DataStore 用户偏好仓库
 ├── di/
-│   └── AppModule.kt
-├── home/
-│   ├── HomeScreen.kt
-│   ├── HomeViewModel.kt
-│   ├── HomeUiState.kt
-│   └── ui/
-│       ├── CompactHomeContent.kt
-│       ├── ExpandedHomeContent.kt
-│       ├── FeatureCard.kt
-│       └── WelcomeCard.kt
-├── privacy/
-│   ├── PrivacyScreen.kt
-│   ├── PrivacyViewModel.kt
-│   ├── PrivacyUiState.kt
-│   └── ui/
-│       ├── DataCollectionCard.kt
-│       ├── NetworkCard.kt
-│       ├── PermissionCard.kt
-│       └── PrivacyButtons.kt
-├── settings/
-│   ├── SettingsScreen.kt
-│   ├── SettingsViewModel.kt
-│   ├── SettingsUiState.kt
-│   └── ui/
-│       ├── LanguageSettingsCard.kt
-│       └── ThemeSettingsCard.kt
+│   └── AppModule.kt                    # Koin 依赖注入模块
+├── screens/
+│   └── home/
+│       ├── HomeScreen.kt               # 主屏幕（自适应布局入口）
+│       ├── HomeViewModel.kt            # 主屏幕 ViewModel
+│       ├── HomeUiState.kt              # 主屏幕 UI 状态
+│       ├── portrait/
+│       │   └── CompactHomeContent.kt   # 紧凑布局（竖屏/小屏）
+│       ├── landscape/
+│       │   └── ExpandedHomeContent.kt  # 展开布局（横屏/大屏）
+│       └── shared/
+│           ├── FeatureCard.kt          # 功能特性卡片
+│           └── WelcomeCard.kt          # 欢迎卡片
 └── ui/
     ├── adaptive/
-    │   └── WindowSizeClass.kt
+    │   └── WindowSizeClass.kt          # 窗口尺寸分类
     ├── navigation/
-    │   ├── AppNavHost.kt
-    │   └── Screen.kt
+    │   ├── AppNavHost.kt               # 导航宿主
+    │   └── Screen.kt                   # 导航目标定义（类型安全）
     └── theme/
-        ├── Color.kt
-        ├── Theme.kt
-        └── Type.kt
+        ├── Color.kt                    # 完整 Material 3 调色板
+        ├── Theme.kt                    # 主题（浅色/深色/动态取色）
+        └── Type.kt                     # 排版样式
 ```
 
 ## 发布版构建配置
@@ -97,7 +87,7 @@ KEY_ALIAS=your_key_alias
 KEY_PASSWORD=your_key_password
 ```
 
-签名文件 `your_key.keystore` 应放置于项目根目录。
+签名文件 `jh.keystore` 需放置于项目根目录。
 
 ### 构建类型
 
@@ -115,6 +105,14 @@ KEY_PASSWORD=your_key_password
 # 构建发布版 AAB
 ./gradlew bundleRelease
 ```
+
+### 构建优化
+
+- Gradle 并行构建 + 构建缓存 + 按需配置
+- R8 全模式混淆优化
+- Kotlin 增量编译
+- 只打包 `arm64-v8a` 架构
+- 阿里云 Maven 镜像加速依赖下载
 
 ## 构建与运行
 
