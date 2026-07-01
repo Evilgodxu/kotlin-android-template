@@ -1,4 +1,4 @@
-package com.template.jh.screens.home.shared
+package com.template.jh.screen.home.portrait.topPanel.welcome
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.template.jh.R
 
-// 欢迎卡片
 @Composable
 fun WelcomeCard(modifier: Modifier = Modifier) {
     Card(

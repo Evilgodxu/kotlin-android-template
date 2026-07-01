@@ -1,4 +1,4 @@
-package com.template.jh.screens.home.shared
+package com.template.jh.screen.home.portrait.middlePanel.features
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-// 功能特性卡片
 @Composable
 fun FeatureCard(
     title: String,

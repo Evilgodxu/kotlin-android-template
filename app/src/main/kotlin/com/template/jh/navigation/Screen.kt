@@ -1,4 +1,4 @@
-package com.template.jh.ui.navigation
+package com.template.jh.navigation
 
 import kotlinx.serialization.Serializable
 

@@ -1,5 +1,6 @@
 package com.template.jh
 
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,32 +10,32 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLocale
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.template.jh.data.repository.UserPreferencesRepository
-import com.template.jh.ui.adaptive.ProvideWindowSizeClass
-import com.template.jh.ui.navigation.AppNavHost
-import com.template.jh.ui.theme.MyApplicationTheme
-import com.template.jh.core.utils.localization.LanguageManager
-import com.template.jh.core.utils.localization.ProvideLocalizedContext
+import com.template.jh.navigation.AppNavHost
+import com.template.jh.theme.MyApplicationTheme
+import kotlinx.coroutines.flow.map
 import org.koin.android.ext.android.inject
+import java.util.Locale
 
-// 主Activity，应用入口
 class MainActivity : ComponentActivity() {
     private val userPreferencesRepository: UserPreferencesRepository by inject()
-    private lateinit var languageManager: LanguageManager
     private lateinit var windowInsetsController: WindowInsetsControllerCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setupSystemBars()
-
-        languageManager = LanguageManager(this, userPreferencesRepository)
 
         setContent {
             val navController = rememberNavController()
@@ -46,19 +47,35 @@ class MainActivity : ComponentActivity() {
                 else -> isSystemInDarkTheme()
             }
 
-            ProvideLocalizedContext(languageManager) {
-                ProvideWindowSizeClass {
-                    MyApplicationTheme(darkTheme = darkTheme, dynamicColor = false) {
-                        Surface(
-                            modifier = Modifier.fillMaxSize(),
-                            color = MaterialTheme.colorScheme.background,
-                        ) {
-                            AppNavHost(navController = navController)
-                        }
+            val locale by userPreferencesRepository.language.map { resolveLocale(it) }
+                .collectAsState(initial = LocalLocale.current.platformLocale)
+            val localizedContext = createLocalizedContext(locale)
+
+            CompositionLocalProvider(LocalContext provides localizedContext) {
+                MyApplicationTheme(darkTheme = darkTheme, dynamicColor = false) {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background,
+                    ) {
+                        AppNavHost(navController = navController)
                     }
                 }
             }
         }
+    }
+
+    private fun resolveLocale(languageCode: String): Locale {
+        return when (languageCode) {
+            "zh" -> Locale.SIMPLIFIED_CHINESE
+            "en" -> Locale.ENGLISH
+            else -> Locale.getDefault()
+        }
+    }
+
+    private fun createLocalizedContext(locale: Locale): Context {
+        val config = Configuration(resources.configuration)
+        config.setLocale(locale)
+        return createConfigurationContext(config)
     }
 
     private fun setupSystemBars() {

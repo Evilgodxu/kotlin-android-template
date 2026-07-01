@@ -1,4 +1,4 @@
-package com.template.jh.ui.theme
+package com.template.jh.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

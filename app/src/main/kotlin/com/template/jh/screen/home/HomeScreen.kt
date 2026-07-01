@@ -1,4 +1,4 @@
-package com.template.jh.screens.home
+package com.template.jh.screen.home
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -9,20 +9,19 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.window.core.layout.WindowSizeClass
 import com.template.jh.R
-import com.template.jh.ui.adaptive.rememberWindowSizeClass
-import com.template.jh.screens.home.landscape.ExpandedHomeContent
-import com.template.jh.screens.home.portrait.CompactHomeContent
+import com.template.jh.screen.home.landscape.LandscapeAssembly
+import com.template.jh.screen.home.portrait.PortraitAssembly
 
-// 主屏幕，根据窗口宽度自适应显示紧凑或扩展布局
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
-    val windowSizeClass = rememberWindowSizeClass()
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
     val topBarInsets = if (!windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)) {
         WindowInsets.statusBars
@@ -41,7 +40,7 @@ fun HomeScreen() {
     ) { innerPadding ->
         when {
             !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> {
-                CompactHomeContent(
+                PortraitAssembly(
                     modifier = Modifier
                         .fillMaxSize()
                         .consumeWindowInsets(innerPadding)
@@ -49,7 +48,7 @@ fun HomeScreen() {
                 )
             }
             else -> {
-                ExpandedHomeContent(
+                LandscapeAssembly(
                     modifier = Modifier
                         .fillMaxSize()
                         .consumeWindowInsets(innerPadding)

@@ -1,4 +1,4 @@
-package com.template.jh.screens.home.portrait
+package com.template.jh.screen.home.portrait
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,12 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.template.jh.R
-import com.template.jh.screens.home.shared.FeatureCard
-import com.template.jh.screens.home.shared.WelcomeCard
+import com.template.jh.screen.home.portrait.middlePanel.features.FeatureCard
+import com.template.jh.screen.home.portrait.topPanel.welcome.WelcomeCard
 
-// 紧凑布局内容（手机竖屏）
 @Composable
-fun CompactHomeContent(modifier: Modifier = Modifier) {
+fun PortraitAssembly(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .padding(16.dp)

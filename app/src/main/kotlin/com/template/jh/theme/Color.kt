@@ -1,4 +1,4 @@
-package com.template.jh.ui.theme
+package com.template.jh.theme
 
 import androidx.compose.ui.graphics.Color
 

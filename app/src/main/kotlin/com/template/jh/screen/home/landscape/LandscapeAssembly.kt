@@ -1,4 +1,4 @@
-package com.template.jh.screens.home.landscape
+package com.template.jh.screen.home.landscape
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,12 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.template.jh.R
-import com.template.jh.screens.home.shared.FeatureCard
-import com.template.jh.screens.home.shared.WelcomeCard
+import com.template.jh.screen.home.landscape.leftPanel.welcome.WelcomeCard
+import com.template.jh.screen.home.landscape.rightPanel.features.FeatureCard
 
-// 扩展布局内容（平板、横屏）
 @Composable
-fun ExpandedHomeContent(modifier: Modifier = Modifier) {
+fun LandscapeAssembly(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .padding(24.dp)
