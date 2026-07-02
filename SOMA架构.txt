@@ -1,0 +1,218 @@
+1. 设计理念
+本规范基于“空间认知理念”制定。目录结构自顶向下反映用户界面的物理空间映射，严禁按“抽象层”、“领域层”等概念进行跨目录拆分。所有功能实现代码必须与 UI 代码置于对应的同一目录层级下，实现物理空间维度上的绝对解耦与高内聚。
+
+2. 四层空间目录结构
+所有页面模块必须严格按照以下四层结构进行目录组织：
+
+2.1 第一层：屏幕/页面
+按业务页面划分顶层目录。
+示例：onboarding/、home/、settings/
+
+2.2 第二层：屏幕方向
+在页面目录下，按屏幕方向独立建立子目录。必须区分竖屏与宽屏。
+portrait/（竖屏/窄屏）
+landscape/（宽屏/横屏）
+
+2.3 第三层：空间分区
+按页面在物理屏幕上的视觉区块进行拆分，必须采用语义命名，禁止使用泛称。
+竖屏示例：top_toolbar/（顶部工具栏）、middle_panel/（中间工作区）、bottom_interaction/（底部交互区）
+宽屏示例：top_toolbar/、left_panel/、main_workspace/、right_collaboration/
+
+2.4 第四层：职责组件
+在各空间分区内，按组件的具体职责再次拆分子目录。
+合并标准：若多个控件共同构成一个不可分割的交互单元（如音乐播放器包含播放、进度条、音量等6+控件，且共享同一业务状态与生命周期），合并为同一独立目录。
+独立标准：若控件职责独立、可单独存在，则各自建立独立目录。
+示例：file_management/、music_player/、model_switch/
+
+3. 布局实现与组装规范
+
+3.1 物理隔离原则
+竖屏与宽屏必须独立实现各自的 UI 代码。禁止使用 if、when 等条件判断语句将不同布局代码写入同一文件。
+
+3.2 横竖屏切换入口
+HomeScreen.kt 作为唯一路由入口，根据 WindowSizeClass.kt 判断当前设备形态，统一选择调用 PortraitAssembly.kt 或 LandscapeAssembly.kt。
+
+3.2.1 WindowSizeClass 用法（谷歌推荐范式）
+WindowSizeClass.kt 必须采用 CompositionLocal 三件套实现，禁止每次直接调用 currentWindowAdaptiveInfo()：
+（1）LocalWindowWidthSizeClass：CompositionLocal 实例，缺省抛错。
+（2）ProvideWindowSizeClass(content)：在 Activity setContent 顶层包裹全部内容，统一提供 WindowWidthSizeClass。
+（3）rememberWindowWidthSizeClass()：业务侧唯一读取入口，返回 WindowWidthSizeClass（COMPACT / MEDIUM / EXPANDED 三档）。
+
+3.2.2 分发约定
+HomeScreen.kt 通过 rememberWindowWidthSizeClass() 获取档位后按以下约定分发：
+WindowWidthSizeClass.COMPACT → PortraitAssembly（手机竖屏）
+WindowWidthSizeClass.MEDIUM / EXPANDED → LandscapeAssembly（平板与宽屏）
+禁止在 Assembly 或子组件内重复读取 currentWindowAdaptiveInfo()，必须复用 LocalWindowWidthSizeClass。
+
+3.3 两级组装职责
+页面级 Assembly（如 PortraitAssembly.kt）：
+决定空间分区的排列方式（Column/Row/Box 顶层布局）。
+仅引用空间分区组件，不直接引用职责组件。
+空间分区级 Panel（如 TopToolbar.kt、LeftPanel.kt）：
+决定职责组件在该分区内的排列方式。
+接收并分发参数，内部引用职责组件。
+
+4. 职责组件规范
+职责组件目录必须是完整自给自足的单元，必须包含以下三类文件：
+UI 组件 (*.kt)：@Composable 函数，纯展示逻辑。
+业务逻辑 (*ViewModel.kt)：处理组件独立业务逻辑。
+组件数据 (*Data.kt)：不可变数据类，定义组件状态。
+
+4.1 UDF 单向数据流规范
+State 向下流动：ViewModel → UI。
+Event 向上流动：UI → ViewModel → 更新 State。
+红线：禁止 UI 直接修改 State；禁止跨组件直接调用 ViewModel。
+
+4.2 ViewModel 规范
+页面级共享：HomeViewModel 由 HomeScreen.kt 持有，通过参数传入各 Assembly 分发。
+组件级独立：若组件有独立业务逻辑，可在组件目录内持有独立 ViewModel，生命周期跟随组件。
+
+5. 数据类三级分层规范
+数据类严禁随意上浮，必须严格按照以下三级层级放置：
+顶层 data/：仅限跨页面持久化数据或多页面共用数据。
+页面级 screen/{page}/data/：该页面宽窄屏共享数据。
+组件级 screen/{page}/{orientation}/{space}/{component}/：仅该组件使用，无任何上级依赖。
+
+5.1 数据初始化与传递协议
+页面级 ViewModel 统一派生职责组件级数据类。
+职责组件级数据类作为不可变参数传入组件。
+职责组件不持有页面级 ViewModel，纯接收不可变数据参数。
+
+6. 代码复用与 stable/ 目录规范
+严禁滥用公共目录，复用代码需严格审核。
+
+6.1 准入条件（同时满足）
+被两次及以上页面复用。
+迭代几乎不改动。
+
+6.2 退出条件（任一满足即退出）
+任一使用方发生变更，变更方下沉独立实现。
+剩余使用方不足两次复用，全部下沉独立实现。
+注：退出后原 stable/ 目录必须删除，不留空壳。各使用方按自身页面空间目录独立实现。
+
+7. 主题与样式规范
+全局主题 (theme/)：仅限 Color.kt、Type.kt、Theme.kt
+空间分区专属样式：直接下沉到对应的空间分区目录，无需复用审核。空间分区样式是物理空间的表现属性，与空间分区强绑定，不存在跨空间复用关系。
+
+8. 基础设施、服务与命名规范
+
+8.1 全局语义化命名
+从空间分区到职责组件，所有目录命名禁止使用广义泛称（如 utils、common、view、base），必须具备明确业务或空间语义。
+
+8.2 基础设施 (infrastructure/)
+纯技术工具（类似 androidx.compose.ui），无副作用、无业务逻辑（如必要的引擎、自适应计算工具）。组件可直接调用。若涉及业务数据，仍需通过数据类层级传递。
+
+8.3 独立服务 (service/)
+用于无固定页面入口的独立服务（如悬浮窗）。UI 归属自身，不绑定到 screen/，遵循自身空间目录规范。
+
+9. Navigation3 与 Koin 集成规范
+
+9.1 Navigation3（强制使用，禁止使用 Navigation2）
+（1）依赖工件：androidx.navigation3:navigation3-runtime 与 androidx.navigation3:navigation3-ui，版本号统一在 libs.versions.toml 中维护。
+（2）路由 Key 必须实现 androidx.navigation3.runtime.NavKey 接口，并标注 @Serializable 注解（状态恢复必须）。
+（3）返回栈使用 rememberNavBackStack(initialKey) 创建，禁止使用旧的 NavController。
+（4）页面渲染使用 NavDisplay，通过 entryProvider 提供 Key → NavEntry 映射。简单路由使用函数式写法：
+    entryProvider = { key ->
+        when (key) {
+            is Home -> NavEntry(key) { HomeScreen() }
+            else -> error("Unknown NavKey: $key")
+        }
+    }
+    多路由且需 metadata 时再使用 entryProvider { entry<T> { ... } } DSL。
+（5）禁止保留 androidx.navigation:navigation-compose（Navigation2）依赖。
+
+9.2 Koin 依赖注入规范
+（1）版本管理：使用 Koin BOM（io.insert-koin:koin-bom）统一管理所有 Koin 工件版本，子工件不再单独写版本号。
+（2）DSL 写法：模块定义使用构造函数引用，禁止使用 lambda + get()。
+    正例：singleOf(::UserPreferencesRepository)
+         viewModelOf(::HomeViewModel)
+    反例：single { UserPreferencesRepository(androidContext()) }
+         viewModel { HomeViewModel(get()) }
+（3）Context 由 Koin 自动注入，禁止在 lambda 中显式调用 androidContext() 获取并传递给构造函数。
+（4）入口点：Composable 用 koinViewModel<T>()，Activity/Service 用 by inject()，禁止直接构造 ViewModel。
+
+9.3 AndroidX App Startup 启动 Koin（强制）
+（1）必须引入 koin-androidx-startup 工件，通过 AndroidX App Startup 的 Initializer 机制自动启动 Koin，禁止在 Application.onCreate() 中手动调用 startKoin { }。
+（2）Application 类实现 KoinStartup 接口，重写 onKoinStartup() 返回 KoinConfiguration：
+    class TemplateApplication : Application(), KoinStartup {
+        override fun onKoinStartup() = koinConfiguration {
+            androidLogger()
+            androidContext(this@TemplateApplication)
+            modules(appModule)
+        }
+    }
+（3）Koin 4.2 实际包名注意：
+    KoinStartup 与 KoinInitializer 位于 org.koin.androix.startup 包（androix 而非 androidx，是 Koin 框架的特殊命名，非拼写错误）。
+    koinConfiguration 函数位于 org.koin.dsl 包。
+（4）KoinStartup 标注 @KoinExperimentalAPI，编译时会有 warning，属正常现象，无需处理。
+
+9.4 仓库镜像配置（网络受限环境）
+settings.gradle.kts 中必须将阿里云镜像置于 google() 之前，避免直连 dl.google.com 超时导致整个 Google 仓库被禁用：
+    dependencyResolutionManagement {
+        repositories {
+            maven { url = uri("https://maven.aliyun.com/repository/google") }
+            maven { url = uri("https://maven.aliyun.com/repository/public") }
+            google()
+            mavenCentral()
+        }
+    }
+
+10. 附录：标准包结构示例
+
+开发新增功能时，请严格对照以下目录树创建文件：
+com.template.evilgodxu/
+├── data/                                       # [顶层] 跨页面持久化/共用数据
+├── infrastructure/                             # [底层] 纯技术基础设施
+│   └── adaptive/
+│       └── WindowSizeClass.kt                 
+├── service/                                    # [服务] 无固定页面的独立服务（按需）
+├── di/                                         # [注入] 依赖注入（Koin）
+├── navigation/                                 # [导航] Navigation3
+├── screen/
+│   └── home/                                   # [第一层] 页面
+│       ├── stable/                             # [复用] 高稳定复用组件（按需）
+│       ├── data/                               # [页面级数据] 宽窄屏共享数据
+│       ├── landscape/                          # [第二层] 宽屏
+│       │   ├── top_toolbar/                    # [第三层] 空间分区
+│       │   │   ├── TopToolbar.kt               # [分区组装入口]
+│       │   │   ├── file_management/            # [第四层] 职责组件
+│       │   │   │   ├── FileManagement.kt       # [UI]
+│       │   │   │   ├── FileManagementViewModel.kt # [业务逻辑]
+│       │   │   │   └── FileManagementData.kt   # [组件数据]
+│       │   │   ├── file_edit/
+│       │   │   └── model_switch/
+│       │   ├── left_panel/
+│       │   │   ├── LeftPanel.kt                
+│       │   │   └── welcome_card/
+│       │   ├── main_workspace/
+│       │   │   ├── MainWorkspace.kt
+│       │   │   └── editor/
+│       │   ├── right_collaboration/
+│       │   │   ├── RightCollaboration.kt
+│       │   │   └── function_card/
+│       │   └── LandscapeAssembly.kt            # [页面级组装]
+│       ├── portrait/                           # [第二层] 竖屏
+│       │   ├── top_toolbar/
+│       │   │   ├── TopToolbar.kt
+│       │   │   ├── file_management/
+│       │   │   ├── file_edit/
+│       │   │   └── terminal/
+│       │   ├── middle_panel/
+│       │   │   ├── MiddlePanel.kt
+│       │   │   ├── features/
+│       │   │   └── welcome_card/
+│       │   ├── bottom_interaction/
+│       │   │   ├── BottomInteraction.kt
+│       │   │   ├── music_player/               # [合并组件示例]
+│       │   │   └── recent_files/
+│       │   └── PortraitAssembly.kt             # [页面级组装]
+│       ├── HomeScreen.kt                       # [路由入口] 判断横竖屏并调用 Assembly
+│       ├── HomeUiState.kt                      # [页面状态]
+│       └── HomeViewModel.kt                    # [页面视图模型]
+├── theme/
+│   ├── Color.kt
+│   ├── Theme.kt
+│   └── Type.kt
+├── TemplateActivity.kt                         # 单一 Activity
+├── TemplateApplication.kt
+└── TemplateViewModel.kt

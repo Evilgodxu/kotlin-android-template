@@ -14,11 +14,11 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.template.jh"
+    namespace = "com.template.evilgodxu"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.template.jh"
+        applicationId = "com.template.evilgodxu"
         minSdk = 32
         targetSdk = 37
         versionCode = 1
@@ -104,6 +104,7 @@ android {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
+    implementation(platform(libs.koin.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
@@ -115,13 +116,14 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.material.icons.extended)
 
-    // 导航框架
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.navigation.runtime)
+    // 导航框架 Navigation3
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
 
-    // 依赖注入 Koin
+    // 依赖注入 Koin（通过 AndroidX App Startup 自动启动）
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.startup)
     implementation(libs.koin.core)
 
     // 键值存储 DataStore
