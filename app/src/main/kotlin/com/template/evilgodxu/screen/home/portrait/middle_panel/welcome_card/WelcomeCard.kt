@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screen.home.portrait.welcome_area
+package com.template.evilgodxu.screen.home.portrait.middle_panel.welcome_card
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

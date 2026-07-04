@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screen.home.portrait.intro_area
+package com.template.evilgodxu.screen.home.portrait.middle_panel.features
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

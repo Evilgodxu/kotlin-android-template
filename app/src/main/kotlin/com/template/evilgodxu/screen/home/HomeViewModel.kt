@@ -3,7 +3,7 @@ package com.template.evilgodxu.screen.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.template.evilgodxu.data.repository.UserPreferencesRepository
-import com.template.evilgodxu.screen.home.landscape.left_panel.LandscapeTab
+import com.template.evilgodxu.screen.home.landscape.main_workspace.sidebar.LandscapeTab
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

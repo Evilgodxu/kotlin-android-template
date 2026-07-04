@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screen.home.landscape.left_panel
+package com.template.evilgodxu.screen.home.landscape.main_workspace.sidebar
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets

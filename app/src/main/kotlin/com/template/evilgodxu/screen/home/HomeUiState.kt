@@ -1,6 +1,6 @@
 package com.template.evilgodxu.screen.home
 
-import com.template.evilgodxu.screen.home.landscape.left_panel.LandscapeTab
+import com.template.evilgodxu.screen.home.landscape.main_workspace.sidebar.LandscapeTab
 
 data class HomeUiState(
     val isLoading: Boolean = false,
