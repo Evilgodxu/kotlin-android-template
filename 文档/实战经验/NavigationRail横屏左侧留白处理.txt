@@ -1,0 +1,27 @@
+NavigationRail 横屏左侧留白处理
+
+场景：横屏 Home 使用 edge-to-edge 后，左侧 NavigationRail 与屏幕边缘之间出现过多留白。页面本身已在 Activity 中调用 enableEdgeToEdge()，横屏根 Scaffold 也已设置 contentWindowInsets = WindowInsets(0, 0, 0, 0)。
+
+根因：Material3 NavigationRail 默认会应用自身 windowInsets。横屏页面已经由外层容器统一处理边到边布局时，NavigationRail 再处理安全区会叠加出额外左侧空白。
+
+处理方案：在横屏 LeftPanel 内对 NavigationRail 显式关闭默认 insets：
+    NavigationRail(
+        modifier = modifier,
+        header = { Spacer(modifier = Modifier.height(32.dp)) },
+        windowInsets = WindowInsets(0, 0, 0, 0),
+    ) {
+        // items
+    }
+
+所需 import：
+    import androidx.compose.foundation.layout.WindowInsets
+
+验证：
+- LeftPanel.kt 无 IDE 诊断。
+- .\gradlew.bat :app:compileDebugKotlin 通过。
+- .\gradlew.bat build 被既有 TemplateActivity.kt 的 FlowOperatorInvokedInComposition lint 错误阻断，非本次修改引入。
+
+注意事项：
+- 不要在 NavigationSuiteScaffold 或横屏根容器外层盲目添加 safeDrawingPadding，否则可能裁剪边到边效果。
+- 对 Material3 自带安全区处理的组件，优先检查组件自身 windowInsets 参数，避免与外层 Scaffold 或页面容器重复处理。
+- 如果页面包含可编辑 TextField、OutlinedTextField 或 BasicTextField，需要同时确认 AndroidManifest.xml 中 Activity 设置 android:windowSoftInputMode="adjustResize"，并保证输入区父容器处理 IME insets。

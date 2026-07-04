@@ -1,6 +1,7 @@
 package com.template.evilgodxu.screen.home.landscape.left_panel
 
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -24,6 +25,7 @@ fun LeftPanel(
     NavigationRail(
         modifier = modifier,
         header = { Spacer(modifier = Modifier.height(32.dp)) },
+        windowInsets = WindowInsets(0, 0, 0, 0),
     ) {
         NavigationRailItem(
             selected = selectedTab == LandscapeTab.HOME,

@@ -7,3 +7,4 @@ SOMA 实战经验
 - WindowWidthSizeClass 弃用处理：WindowWidthSizeClass弃用处理.txt
 - android.enableJetifier 弃用处理：android.enableJetifier弃用处理.txt
 - ModalBottomSheet 语言切换问题：ModalBottomSheet语言切换问题.txt
+- NavigationRail 横屏左侧留白处理：NavigationRail横屏左侧留白处理.txt
