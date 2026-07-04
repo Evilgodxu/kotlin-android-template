@@ -4,21 +4,21 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
-import androidx.window.core.layout.WindowWidthSizeClass
+import androidx.window.core.layout.WindowSizeClass
 
-val LocalWindowWidthSizeClass = compositionLocalOf<WindowWidthSizeClass> {
-    error("WindowWidthSizeClass not provided")
+val LocalWindowSizeClass = compositionLocalOf<WindowSizeClass> {
+    error("WindowSizeClass not provided")
 }
 
 @Composable
 fun ProvideWindowSizeClass(content: @Composable () -> Unit) {
-    val windowWidthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
-    CompositionLocalProvider(LocalWindowWidthSizeClass provides windowWidthSizeClass) {
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    CompositionLocalProvider(LocalWindowSizeClass provides windowSizeClass) {
         content()
     }
 }
 
 @Composable
-fun rememberWindowWidthSizeClass(): WindowWidthSizeClass {
-    return LocalWindowWidthSizeClass.current
+fun rememberWindowSizeClass(): WindowSizeClass {
+    return LocalWindowSizeClass.current
 }

@@ -34,15 +34,16 @@ HomeScreen.kt 作为唯一路由入口，根据 WindowSizeClass.kt 判断当前�
 
 3.2.1 WindowSizeClass 用法（谷歌推荐范式）
 WindowSizeClass.kt 必须采用 CompositionLocal 三件套实现，禁止每次直接调用 currentWindowAdaptiveInfo()：
-（1）LocalWindowWidthSizeClass：CompositionLocal 实例，缺省抛错。
-（2）ProvideWindowSizeClass(content)：在 Activity setContent 顶层包裹全部内容，统一提供 WindowWidthSizeClass。
-（3）rememberWindowWidthSizeClass()：业务侧唯一读取入口，返回 WindowWidthSizeClass（COMPACT / MEDIUM / EXPANDED 三档）。
+（1）LocalWindowSizeClass：CompositionLocal 实例，缺省抛错。
+（2）ProvideWindowSizeClass(content)：在 Activity setContent 顶层包裹全部内容，统一提供 WindowSizeClass。
+（3）rememberWindowSizeClass()：业务侧唯一读取入口，返回 WindowSizeClass。
+自 androidx.window 1.4.0 起，WindowWidthSizeClass 已 @Deprecated，应直接持有 WindowSizeClass 并通过 isWidthAtLeastBreakpoint/isAtLeastBreakpoint 进行断点判断。
 
 3.2.2 分发约定
-HomeScreen.kt 通过 rememberWindowWidthSizeClass() 获取档位后按以下约定分发：
-WindowWidthSizeClass.COMPACT → PortraitAssembly（手机竖屏）
-WindowWidthSizeClass.MEDIUM / EXPANDED → LandscapeAssembly（平板与宽屏）
-禁止在 Assembly 或子组件内重复读取 currentWindowAdaptiveInfo()，必须复用 LocalWindowWidthSizeClass。
+HomeScreen.kt 通过 rememberWindowSizeClass() 获取 WindowSizeClass 后按以下约定分发：
+宽度 < 600dp（!isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)）→ PortraitAssembly（手机竖屏）
+宽度 ≥ 600dp（isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)）→ LandscapeAssembly（平板与宽屏）
+禁止在 Assembly 或子组件内重复读取 currentWindowAdaptiveInfo()，必须复用 LocalWindowSizeClass。
 
 3.3 两级组装职责
 页面级 Assembly（如 PortraitAssembly.kt）：
@@ -144,18 +145,13 @@ Event 向上流动：UI → ViewModel → 更新 State。
 （3）Koin 4.2 实际包名注意：
     KoinStartup 与 KoinInitializer 位于 org.koin.androix.startup 包（androix 而非 androidx，是 Koin 框架的特殊命名，非拼写错误）。
     koinConfiguration 函数位于 org.koin.dsl 包。
-（4）KoinStartup 标注 @KoinExperimentalAPI，编译时会有 warning，属正常现象，无需处理。
+（4）KoinStartup 接口仍标注 @KoinExperimentalAPI，编译时会有 warning，属正常现象。KoinInitializer 同样标记为实验性。若项目要求零实验性 API，参考《SOMA实战经验.txt》第 2.1 节。
 
 9.4 仓库镜像配置（网络受限环境）
-settings.gradle.kts 中必须将阿里云镜像置于 google() 之前，避免直连 dl.google.com 超时导致整个 Google 仓库被禁用：
-    dependencyResolutionManagement {
-        repositories {
-            maven { url = uri("https://maven.aliyun.com/repository/google") }
-            maven { url = uri("https://maven.aliyun.com/repository/public") }
-            google()
-            mavenCentral()
-        }
-    }
+具体镜像选择、仓库顺序及踩坑记录参考《SOMA实战经验.txt》第 1 节。
+架构规范本身不强制具体镜像服务商，只要求：
+1. 国内镜像置于官方源之前以加速下载；
+2. 保留 google() / mavenCentral() / gradlePluginPortal() 作为 fallback。
 
 10. 附录：标准包结构示例
 
@@ -216,3 +212,6 @@ com.template.evilgodxu/
 ├── TemplateActivity.kt                         # 单一 Activity
 ├── TemplateApplication.kt
 └── TemplateViewModel.kt
+
+11. 实验性 API 与弃用警告处理
+KoinStartup 实验性 API、WindowWidthSizeClass 弃用等具体处理方案参考《SOMA实战经验.txt》第 2 节。

@@ -100,7 +100,7 @@ app/src/main/kotlin/com/template/evilgodxu/
 
 - **物理隔离原则**：竖屏与宽屏独立实现，禁止使用 `if`/`when` 混用布局
 - **两级组装**：`HomeScreen` 路由入口按 `WindowSizeClass` 分发到 `PortraitAssembly` 或 `LandscapeAssembly`
-- **WindowSizeClass 三件套**：`LocalWindowWidthSizeClass` + `ProvideWindowSizeClass` + `rememberWindowWidthSizeClass()`
+- **WindowSizeClass 三件套**：`LocalWindowSizeClass` + `ProvideWindowSizeClass` + `rememberWindowSizeClass()`
 - **UDF 单向数据流**：State 向下流动（ViewModel → UI），Event 向上流动（UI → ViewModel）
 - **数据三级分层**：顶层 `data/`（跨页面）→ 页面级 `screen/{page}/data/` → 组件级
 - **Navigation3 强制**：使用 `NavKey` + `NavDisplay`，禁止使用 Navigation2
