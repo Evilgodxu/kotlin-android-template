@@ -28,23 +28,24 @@
 - **多语言支持** — 支持简体中文、英文与跟随系统，应用内实时切换
 - **主题切换** — 浅色 / 深色 / 跟随系统，运行时切换
 - **边缘到边缘** — 支持 Edge-to-Edge 显示
-- **依赖注入** — 基于 Koin 4.2 + AndroidX App Startup 自动启动，零模板代码
-- **状态持久化** — DataStore 存储主题、语言等用户偏好
+- **依赖注入** — 基于 Koin 4.2，Application.onCreate() 手动启动，零模板代码
+- **状态持久化** — Preference DataStore 存储主题、语言等用户偏好
 
 ## 技术栈
 
 | 类别 | 技术 |
 |------|------|
 | 语言 | Kotlin 2.4 |
-| UI | Jetpack Compose + Material 3 |
+| UI | Jetpack Compose + Material 3（Compose BOM 2026.06.01） |
 | 架构 | SOMA（Screen-Oriented Modular Architecture） |
-| 依赖注入 | Koin 4.2（BOM 统一版本 + App Startup 启动） |
-| 导航 | Navigation3 1.1（NavKey + NavDisplay） |
-| 状态管理 | DataStore 1.2 + StateFlow（UDF 单向数据流） |
+| 依赖注入 | Koin 4.2（BOM 统管版本 + Application.onCreate 手动启动） |
+| 导航 | Navigation3 1.1.4（NavKey + NavDisplay） |
+| 状态管理 | Preference DataStore 1.2.1 + StateFlow（UDF 单向数据流） |
 | 异步处理 | Kotlin Coroutines + Flow |
 | 序列化 | Kotlin Serialization 1.11 |
 | 自适应 | Material 3 Adaptive 1.2 |
-| 构建 | AGP 9.2 + Gradle 9.6 |
+| 版本管理 | refreshVersions 0.60.6（自动生成 libs.versions.toml） |
+| 构建 | AGP 9.2.1 + Gradle 9.6.1 |
 
 ## 环境要求
 
@@ -59,16 +60,16 @@
 ```
 app/src/main/kotlin/com/template/evilgodxu/
 ├── TemplateActivity.kt              # 单一 Activity，Edge-to-Edge、主题/语言初始化
-├── TemplateApplication.kt            # 应用入口，KoinStartup 自动启动 Koin
-├── TemplateViewModel.kt             # 全局根 ViewModel，跨页面共享状态
+├── TemplateApplication.kt            # 应用入口，startKoin 手动启动 Koin
+├── TemplateViewModel.kt             # 全局根 ViewModel（预留）
 ├── data/
 │   └── repository/
-│       └── UserPreferencesRepository.kt # DataStore 用户偏好仓库（跨页面共用）
+│       └── UserPreferencesRepository.kt # Preference DataStore 用户偏好仓库
 ├── di/
 │   └── AppModule.kt                    # Koin 依赖注入模块
 ├── infrastructure/
 │   └── adaptive/
-│       └── WindowSizeClass.kt          # 窗口尺寸 CompositionLocal 三件套
+│       └── WindowSizeClass.kt          # CompositionLocal 窗口尺寸三件套
 ├── navigation/
 │   ├── AppNavHost.kt                   # Navigation3 导航宿主（NavDisplay）
 │   └── Screen.kt                       # NavKey 路由定义（@Serializable）
@@ -79,24 +80,28 @@ app/src/main/kotlin/com/template/evilgodxu/
 │       ├── HomeUiState.kt              # 页面级 UI 状态
 │       ├── portrait/                   # [第二层] 竖屏
 │       │   ├── PortraitAssembly.kt     # 竖屏页面级组装入口
-│       │   ├── top_panel/              # [第三层] 空间分区
-│       │   │   ├── TopPanel.kt
-│       │   │   └── welcome_card/       # [第四层] 职责组件
-│       │   │       └── WelcomeCard.kt
-│       │   └── middle_panel/
+│       │   ├── top_toolbar/            # [第三层] 空间分区：顶部工具栏
+│       │   │   ├── TopToolbar.kt
+│       │   │   ├── SettingsSheet.kt
+│       │   │   └── OptionItem.kt
+│       │   └── middle_panel/           # [第三层] 空间分区：中部内容
 │       │       ├── MiddlePanel.kt
+│       │       ├── welcome_card/       # [第四层] 职责组件
+│       │       │   └── WelcomeCard.kt
 │       │       └── features/
 │       │           └── FeatureCard.kt
 │       └── landscape/                  # [第二层] 宽屏
 │           ├── LandscapeAssembly.kt    # 宽屏页面级组装入口
-│           ├── left_panel/             # [第三层] 空间分区
-│           │   ├── LeftPanel.kt
-│           │   └── welcome_card/       # [第四层] 职责组件
-│           │       └── WelcomeCard.kt
-│           └── right_panel/
-│               ├── RightPanel.kt
-│               └── features/
-│                   └── FeatureCard.kt
+│           └── main_workspace/         # [第三层] 空间分区：主工作区
+│               ├── MainWorkspace.kt
+│               ├── sidebar/            # [第四层] 职责组件
+│               │   ├── LeftPanel.kt
+│               │   └── LandscapeTab.kt
+│               ├── home_summary/
+│               │   ├── HomeSummary.kt
+│               │   └── FeatureCard.kt
+│               └── settings/
+│                   └── SettingsPanel.kt
 └── theme/
     ├── Color.kt                        # 完整 Material 3 调色板
     ├── Theme.kt                        # 主题（浅色/深色/动态取色）
@@ -109,9 +114,9 @@ app/src/main/kotlin/com/template/evilgodxu/
 
 ### 四层空间目录结构
 
-1. **第一层 - 屏幕/页面**：按业务页面划分（如 `home/`、`settings/`）
+1. **第一层 - 屏幕/页面**：按业务页面划分（如 `home/`）
 2. **第二层 - 屏幕方向**：严格区分竖屏 `portrait/` 与宽屏 `landscape/`
-3. **第三层 - 空间分区**：按物理屏幕视觉区块语义命名（如 `top_panel/`、`left_panel/`）
+3. **第三层 - 空间分区**：按物理屏幕视觉区块语义命名（如 `top_toolbar/`、`sidebar/`）
 4. **第四层 - 职责组件**：按组件职责拆分，自给自足的独立单元
 
 ### 核心规范
@@ -162,7 +167,8 @@ KEY_PASSWORD=your_key_password
 - R8 全模式混淆优化
 - Kotlin 增量编译
 - 只打包 `arm64-v8a` 架构
-- 阿里云 Maven 镜像加速依赖下载
+- 腾讯云 Maven 镜像加速依赖下载
+- refreshVersions 插件管理依赖版本
 
 ## 构建与运行
 
