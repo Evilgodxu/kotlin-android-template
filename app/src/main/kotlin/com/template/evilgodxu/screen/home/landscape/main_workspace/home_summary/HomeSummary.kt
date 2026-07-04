@@ -40,7 +40,6 @@ fun HomeSummary(modifier: Modifier = Modifier) {
         }
 
         Column(
-            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             FeatureCard(

@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Template</string>
 
     <!-- 主页 -->
     <string name="home_title">首页</string>
     <string name="home_welcome">欢迎使用</string>
-    <string name="home_welcome_subtitle">简洁美观的自适应示例应用</string>
+    <string name="home_welcome_subtitle">空间认知架构示例模板</string>
     <string name="home_features_title">功能特性</string>
     <string name="home_feature_1">自适应布局</string>
     <string name="home_feature_1_desc">根据设备屏幕尺寸自动调整布局</string>

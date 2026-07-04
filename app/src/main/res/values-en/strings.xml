@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Template</string>
 
     <!-- Home -->
     <string name="home_title">Home</string>
     <string name="home_welcome">Welcome</string>
-    <string name="home_welcome_subtitle">A clean and beautiful adaptive sample app</string>
+    <string name="home_welcome_subtitle">Spatial Cognitive Architecture Example Template</string>
     <string name="home_features_title">Features</string>
     <string name="home_feature_1">Adaptive Layout</string>
     <string name="home_feature_1_desc">Automatically adjusts layout based on screen size</string>
