@@ -2,6 +2,24 @@
 
 一个基于 Jetpack Compose 的 Android 应用模板项目，采用 SOMA 架构（基于空间认知理念），开箱即用。
 
+## 应用预览
+
+<p align="center">
+  <img src="docs/Image/0..webp" alt="界面预览" width="300"/>
+</p>
+
+<p align="center">
+  <img src="docs/Image/1..webp" alt="界面预览" width="300"/>
+</p>
+
+<p align="center">
+  <img src="docs/Image/2..webp" alt="界面预览" width="800"/>
+</p>
+
+<p align="center">
+  <img src="docs/Image/3..webp" alt="界面预览" width="800"/>
+</p>
+
 ## 功能特性
 
 - **SOMA 架构** — 基于空间认知理念的目录组织，自顶向下映射 UI 物理空间
