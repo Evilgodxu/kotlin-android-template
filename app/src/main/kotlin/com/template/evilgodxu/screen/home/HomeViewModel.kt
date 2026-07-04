@@ -3,6 +3,7 @@ package com.template.evilgodxu.screen.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.template.evilgodxu.data.repository.UserPreferencesRepository
+import com.template.evilgodxu.screen.home.landscape.left_panel.LandscapeTab
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,5 +45,9 @@ class HomeViewModel(
 
     fun hideSettings() {
         _state.value = _state.value.copy(showSettings = false)
+    }
+
+    fun selectTab(tab: LandscapeTab) {
+        _state.value = _state.value.copy(selectedTab = tab)
     }
 }

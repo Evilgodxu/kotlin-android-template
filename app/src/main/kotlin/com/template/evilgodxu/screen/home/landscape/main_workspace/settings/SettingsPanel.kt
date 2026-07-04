@@ -1,18 +1,20 @@
-package com.template.evilgodxu.screen.home.landscape.top_toolbar
+package com.template.evilgodxu.screen.home.landscape.main_workspace.settings
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.BrightnessAuto
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -22,22 +24,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsMenu(
+fun SettingsPanel(
     themeMode: String,
     language: String,
     onThemeModeChange: (String) -> Unit,
     onLanguageChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
+    Column(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         SettingsDropdown(
             label = stringResource(R.string.settings_theme_title),
@@ -47,12 +49,11 @@ fun SettingsMenu(
                 else -> stringResource(R.string.theme_system)
             },
             options = listOf(
-                "system" to stringResource(R.string.theme_system) to Icons.Default.BrightnessAuto,
-                "light" to stringResource(R.string.theme_light) to Icons.Default.LightMode,
-                "dark" to stringResource(R.string.theme_dark) to Icons.Default.Bedtime,
+                Triple("system", stringResource(R.string.theme_system), Icons.Default.BrightnessAuto),
+                Triple("light", stringResource(R.string.theme_light), Icons.Default.LightMode),
+                Triple("dark", stringResource(R.string.theme_dark), Icons.Default.Bedtime),
             ),
             onOptionSelected = onThemeModeChange,
-            modifier = Modifier.width(140.dp),
         )
 
         SettingsDropdown(
@@ -63,12 +64,11 @@ fun SettingsMenu(
                 else -> stringResource(R.string.language_system)
             },
             options = listOf(
-                "system" to stringResource(R.string.language_system) to Icons.Default.BrightnessAuto,
-                "zh" to stringResource(R.string.language_chinese) to Icons.Default.Language,
-                "en" to stringResource(R.string.language_english) to Icons.Default.Language,
+                Triple("system", stringResource(R.string.language_system), Icons.Default.BrightnessAuto),
+                Triple("zh", stringResource(R.string.language_chinese), Icons.Default.Language),
+                Triple("en", stringResource(R.string.language_english), Icons.Default.Language),
             ),
             onOptionSelected = onLanguageChange,
-            modifier = Modifier.width(140.dp),
         )
     }
 }
@@ -78,7 +78,7 @@ fun SettingsMenu(
 private fun SettingsDropdown(
     label: String,
     value: String,
-    options: List<Pair<Pair<String, String>, androidx.compose.ui.graphics.vector.ImageVector>>,
+    options: List<Triple<String, String, ImageVector>>,
     onOptionSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -87,30 +87,35 @@ private fun SettingsDropdown(
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = it },
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
     ) {
         TextField(
             value = value,
             onValueChange = {},
             readOnly = true,
-            label = { Text(label, style = MaterialTheme.typography.labelSmall) },
+            label = { Text(label) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
             singleLine = true,
         )
 
-        DropdownMenu(
+        ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.exposedDropdownSize(),
         ) {
-            options.forEach { (option, icon) ->
-                val (key, text) = option
-                OptionItem(
-                    label = text,
-                    icon = icon,
-                    selected = value == text,
+            options.forEach { (key, text, icon) ->
+                DropdownMenuItem(
+                    text = { Text(text) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                    },
                     onClick = {
                         onOptionSelected(key)
                         expanded = false

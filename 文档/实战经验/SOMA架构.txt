@@ -14,7 +14,7 @@ portrait/（竖屏/窄屏）
 landscape/（宽屏/横屏）
 
 2.3 第三层：空间分区
-按页面在物理屏幕上的视觉区块进行拆分，必须采用语义命名，禁止使用泛称。
+按页面在物理屏幕上的视觉区块进行拆分，必须采用语义命名，禁止使用泛称；是否使用下划线，不强制也不禁止。
 竖屏示例：top_toolbar/（顶部工具栏）、middle_panel/（中间工作区）、bottom_interaction/（底部交互区）
 宽屏示例：top_toolbar/、left_panel/、main_workspace/、right_collaboration/
 
@@ -98,7 +98,8 @@ Event 向上流动：UI → ViewModel → 更新 State。
 8. 基础设施、服务与命名规范
 
 8.1 全局语义化命名
-从空间分区到职责组件，所有目录命名禁止使用广义泛称（如 utils、common、view、base），必须具备明确业务或空间语义。
+从空间分区到职责组件，所有目录命名禁止使用广义泛称（如 utils、common、view、base、content、navigation），必须具备明确业务或空间语义。
+命名不强制使用或禁止下划线，但必须以“空间映射 + 语义命名”为准则，杜绝泛称。
 
 8.2 基础设施 (infrastructure/)
 纯技术工具（类似 androidx.compose.ui），无副作用、无业务逻辑（如必要的引擎、自适应计算工具）。组件可直接调用。若涉及业务数据，仍需通过数据类层级传递。

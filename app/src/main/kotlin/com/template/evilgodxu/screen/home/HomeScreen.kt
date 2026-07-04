@@ -25,6 +25,7 @@ fun HomeScreen(
             uiState = uiState,
             onThemeModeChange = { homeViewModel.setThemeMode(it) },
             onLanguageChange = { homeViewModel.setLanguage(it) },
+            onTabSelected = { homeViewModel.selectTab(it) },
         )
     } else {
         PortraitAssembly(

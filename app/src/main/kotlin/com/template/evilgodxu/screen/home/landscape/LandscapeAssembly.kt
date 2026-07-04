@@ -10,11 +10,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.template.evilgodxu.screen.home.HomeUiState
-import com.template.evilgodxu.screen.home.landscape.left_content.WelcomeCard
-import com.template.evilgodxu.screen.home.landscape.right_content.RightContent
-import com.template.evilgodxu.screen.home.landscape.top_toolbar.TopToolbar
+import com.template.evilgodxu.screen.home.landscape.left_panel.LandscapeTab
+import com.template.evilgodxu.screen.home.landscape.left_panel.LeftPanel
+import com.template.evilgodxu.screen.home.landscape.main_workspace.MainWorkspace
 
-// 宽屏页面组装入口：决定空间分区的排列方式
+// 宽屏页面组装入口：左侧导航面板 + 右侧主工作区
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LandscapeAssembly(
@@ -22,27 +22,31 @@ fun LandscapeAssembly(
     uiState: HomeUiState,
     onThemeModeChange: (String) -> Unit = {},
     onLanguageChange: (String) -> Unit = {},
+    onTabSelected: (LandscapeTab) -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
-        topBar = {
-            TopToolbar(
-                themeMode = uiState.themeMode,
-                language = uiState.language,
-                onThemeModeChange = onThemeModeChange,
-                onLanguageChange = onLanguageChange,
-            )
-        },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { innerPadding ->
         Row(
             modifier = Modifier
                 .fillMaxSize()
                 .consumeWindowInsets(innerPadding)
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
-            WelcomeCard(modifier = Modifier.weight(1f))
-            RightContent(modifier = Modifier.weight(1f))
+            LeftPanel(
+                selectedTab = uiState.selectedTab,
+                onTabSelected = onTabSelected,
+            )
+
+            MainWorkspace(
+                modifier = Modifier.weight(1f),
+                selectedTab = uiState.selectedTab,
+                themeMode = uiState.themeMode,
+                language = uiState.language,
+                onThemeModeChange = onThemeModeChange,
+                onLanguageChange = onLanguageChange,
+            )
         }
     }
 }
