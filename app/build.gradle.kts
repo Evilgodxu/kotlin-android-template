@@ -120,10 +120,9 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
 
-    // 依赖注入 Koin（通过 AndroidX App Startup 自动启动）
+    // 依赖注入 Koin（在 Application.onCreate 中手动启动）
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.androidx.startup)
     implementation(libs.koin.core)
 
     // 键值存储 DataStore

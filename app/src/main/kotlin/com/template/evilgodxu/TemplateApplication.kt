@@ -4,14 +4,16 @@ import android.app.Application
 import com.template.evilgodxu.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
-import org.koin.androix.startup.KoinStartup
-import org.koin.dsl.koinConfiguration
+import org.koin.core.context.startKoin
 
-class TemplateApplication : Application(), KoinStartup {
+class TemplateApplication : Application() {
 
-    override fun onKoinStartup() = koinConfiguration {
-        androidLogger()
-        androidContext(this@TemplateApplication)
-        modules(appModule)
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            androidLogger()
+            androidContext(this@TemplateApplication)
+            modules(appModule)
+        }
     }
 }

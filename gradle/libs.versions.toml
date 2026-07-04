@@ -50,7 +50,6 @@ androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koinBom" }
 koin-android = { group = "io.insert-koin", name = "koin-android" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose" }
-koin-androidx-startup = { group = "io.insert-koin", name = "koin-androidx-startup" }
 koin-core = { group = "io.insert-koin", name = "koin-core" }
 
 # 键值存储 DataStore

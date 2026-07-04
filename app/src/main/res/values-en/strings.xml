@@ -1,30 +1,34 @@
 <resources>
     <string name="app_name">My Application</string>
 
-    <!-- 主页 -->
+    <!-- Home -->
     <string name="home_title">Home</string>
     <string name="home_welcome">Welcome</string>
-    <string name="home_welcome_subtitle">This is a sample app with adaptive layout support</string>
+    <string name="home_welcome_subtitle">A clean and beautiful adaptive sample app</string>
+    <string name="home_features_title">Features</string>
     <string name="home_feature_1">Adaptive Layout</string>
     <string name="home_feature_1_desc">Automatically adjusts layout based on screen size</string>
     <string name="home_feature_2">Multi-language Support</string>
-    <string name="home_feature_2_desc">Supports Chinese and English switching</string>
+    <string name="home_feature_2_desc">Switch between 简体中文 and English</string>
+    <string name="home_feature_3">Theme Switching</string>
+    <string name="home_feature_3_desc">Follow system, light, or dark mode</string>
 
-    <!-- 设置页 -->
+    <!-- Settings -->
     <string name="settings_title">Settings</string>
+    <string name="settings_subtitle">Customize theme and language preferences</string>
     <string name="settings_theme_title">Theme</string>
     <string name="settings_language_title">Language</string>
 
-    <!-- 主题选项 -->
+    <!-- Theme options -->
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
 
-    <!-- 语言选项 -->
+    <!-- Language options -->
     <string name="language_system">System</string>
     <string name="language_chinese">简体中文</string>
     <string name="language_english">English</string>
 
-    <!-- 通用 -->
+    <!-- Common -->
     <string name="back">Back</string>
 </resources>

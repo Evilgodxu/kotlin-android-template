@@ -132,7 +132,7 @@ Event 向上流动：UI → ViewModel → 更新 State。
 （3）Context 由 Koin 自动注入，禁止在 lambda 中显式调用 androidContext() 获取并传递给构造函数。
 （4）入口点：Composable 用 koinViewModel<T>()，Activity/Service 用 by inject()，禁止直接构造 ViewModel。
 
-9.3 AndroidX App Startup 启动 Koin（强制）
+9.3 AndroidX App Startup 启动 Koin（建议）
 （1）必须引入 koin-androidx-startup 工件，通过 AndroidX App Startup 的 Initializer 机制自动启动 Koin，禁止在 Application.onCreate() 中手动调用 startKoin { }。
 （2）Application 类实现 KoinStartup 接口，重写 onKoinStartup() 返回 KoinConfiguration：
     class TemplateApplication : Application(), KoinStartup {
@@ -142,10 +142,7 @@ Event 向上流动：UI → ViewModel → 更新 State。
             modules(appModule)
         }
     }
-（3）Koin 4.2 实际包名注意：
-    KoinStartup 与 KoinInitializer 位于 org.koin.androix.startup 包（androix 而非 androidx，是 Koin 框架的特殊命名，非拼写错误）。
-    koinConfiguration 函数位于 org.koin.dsl 包。
-（4）KoinStartup 接口仍标注 @KoinExperimentalAPI，编译时会有 warning，属正常现象。KoinInitializer 同样标记为实验性。若项目要求零实验性 API，参考《SOMA实战经验.txt》第 2.1 节。
+（3）Koin 4.2 的包名与实验性 API 注意事项参考《SOMA实战经验.txt》第 2.1 节。
 
 9.4 仓库镜像配置（网络受限环境）
 具体镜像选择、仓库顺序及踩坑记录参考《SOMA实战经验.txt》第 1 节。

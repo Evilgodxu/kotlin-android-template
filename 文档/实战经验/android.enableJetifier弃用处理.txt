@@ -1,0 +1,17 @@
+android.enableJetifier 弃用处理
+
+Android Gradle Plugin 10.0 起将移除 `android.enableJetifier` 属性。构建日志警告：
+
+    WARNING: The option setting 'android.enableJetifier=true' is deprecated.
+    The current default is 'false'.
+    It will be removed in version 10.0 of the Android Gradle plugin.
+
+Jetifier 的作用是在构建期把旧版 support 库依赖自动迁移为 AndroidX。若项目本身已启用 `android.useAndroidX=true`，且所有直接/传递依赖均为 AndroidX，则无需再开启 Jetifier。
+
+处理方案：
+（1）从 gradle.properties 中删除或注释掉：
+    android.enableJetifier=true
+（2）同步清理 app/build.gradle.kts 与 libs.versions.toml 中不再需要的 Jetifier/Startup 相关依赖。
+（3）执行一次 clean build，确认无 `enableJetifier` 相关警告。
+
+注意：若后续引入某个未迁移到 AndroidX 的第三方库导致构建失败，可选择迁移该库或临时重新启用 Jetifier，但优先推荐升级/替换依赖。

@@ -23,11 +23,17 @@ fun HomeScreen(
         LandscapeAssembly(
             modifier = modifier,
             uiState = uiState,
+            onThemeModeChange = { homeViewModel.setThemeMode(it) },
+            onLanguageChange = { homeViewModel.setLanguage(it) },
         )
     } else {
         PortraitAssembly(
             modifier = modifier,
             uiState = uiState,
+            onShowSettings = { homeViewModel.showSettings() },
+            onHideSettings = { homeViewModel.hideSettings() },
+            onThemeModeChange = { homeViewModel.setThemeMode(it) },
+            onLanguageChange = { homeViewModel.setLanguage(it) },
         )
     }
 }

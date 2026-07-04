@@ -1,0 +1,28 @@
+KoinStartup 实验性 API 处理
+
+Koin 4.2.x 相关 API 的包名与实验性状态需注意：
+
+- KoinStartup 与 KoinInitializer 位于 org.koin.androix.startup 包（androix 而非 androidx，是 Koin 框架的特殊命名，非拼写错误）。
+- koinConfiguration 函数位于 org.koin.dsl 包。
+- KoinStartup / KoinInitializer 仍标注 @KoinExperimentalAPI，编译时会产生 warning，不影响功能。
+
+若项目要求零实验性 API，改用 Application.onCreate() 中手动 startKoin { }：
+（1）移除 koin-androidx-startup 工件依赖，仅保留 koin-android。
+（2）Application 类不再实现 KoinStartup 接口：
+    class TemplateApplication : Application() {
+        override fun onCreate() {
+            super.onCreate()
+            startKoin {
+                androidLogger()
+                androidContext(this@TemplateApplication)
+                modules(appModule)
+            }
+        }
+    }
+所需 import：
+    import org.koin.android.ext.koin.androidContext
+    import org.koin.android.ext.koin.androidLogger
+    import org.koin.core.context.startKoin
+注：此方案失去 AndroidX App Startup 自动启动优势，Koin 在 Application.onCreate() 中同步启动。
+
+本项目已按此方案落地：移除 koin-androidx-startup 依赖，删除 KoinInitializer 相关 meta-data，在 TemplateApplication.onCreate() 中调用 startKoin { }。

@@ -7,15 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.template.evilgodxu.R
 import com.template.evilgodxu.screen.home.HomeUiState
-import com.template.evilgodxu.screen.home.landscape.left_panel.LeftPanel
-import com.template.evilgodxu.screen.home.landscape.right_panel.RightPanel
+import com.template.evilgodxu.screen.home.landscape.left_content.WelcomeCard
+import com.template.evilgodxu.screen.home.landscape.right_content.RightContent
+import com.template.evilgodxu.screen.home.landscape.top_toolbar.TopToolbar
 
 // 宽屏页面组装入口：决定空间分区的排列方式
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,13 +20,17 @@ import com.template.evilgodxu.screen.home.landscape.right_panel.RightPanel
 fun LandscapeAssembly(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
+    onThemeModeChange: (String) -> Unit = {},
+    onLanguageChange: (String) -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.home_title)) },
-                windowInsets = WindowInsets(0, 0, 0, 0),
+            TopToolbar(
+                themeMode = uiState.themeMode,
+                language = uiState.language,
+                onThemeModeChange = onThemeModeChange,
+                onLanguageChange = onLanguageChange,
             )
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -40,8 +41,8 @@ fun LandscapeAssembly(
                 .consumeWindowInsets(innerPadding)
                 .padding(innerPadding)
         ) {
-            LeftPanel()
-            RightPanel()
+            WelcomeCard(modifier = Modifier.weight(1f))
+            RightContent(modifier = Modifier.weight(1f))
         }
     }
 }
