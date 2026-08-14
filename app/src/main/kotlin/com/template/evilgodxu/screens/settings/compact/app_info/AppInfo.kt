@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.template.evilgodxu.R
 
-private const val GITHUB_URL = "https://github.com/Evilgodxu/kotlin-android-template.git"
+private const val GITHUB_URL = "https://github.com/Evilgodxu/android-template"
 
 @Composable
 fun AppInfo(version: String) {
