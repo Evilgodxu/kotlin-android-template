@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
-// 职责组件：功能特性卡片（展开视图样式）
+// 功能特性卡片（展开视图样式）
 @Composable
 fun FeatureCardComponent(
     title: String,

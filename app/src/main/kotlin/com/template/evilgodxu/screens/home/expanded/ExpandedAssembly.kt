@@ -24,14 +24,12 @@ import com.template.evilgodxu.screens.home.expanded.sidebar.SidebarArea
 import com.template.evilgodxu.screens.home.expanded.sidebar.SidebarTab
 import com.template.evilgodxu.screens.home.expanded.summary.SummaryArea
 
-// 展开视图空间分区组装器：左侧导航区 + 右侧内容区（按侧边栏 Tab 切换内容）
+// 展开布局组装器：侧边栏 + 内容区（按 Tab 切换）
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpandedAssembly(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
-    onThemeModeChange: (String) -> Unit = {},
-    onLanguageChange: (String) -> Unit = {},
     onTabSelected: (SidebarTab) -> Unit = {},
 ) {
     Scaffold(
@@ -67,12 +65,7 @@ fun ExpandedAssembly(
                             color = MaterialTheme.colorScheme.onBackground,
                         )
 
-                        SettingsArea(
-                            themeMode = uiState.themeMode,
-                            language = uiState.language,
-                            onThemeModeChange = onThemeModeChange,
-                            onLanguageChange = onLanguageChange,
-                        )
+                        SettingsArea()
                     }
                 }
             }

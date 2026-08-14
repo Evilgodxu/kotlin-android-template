@@ -23,7 +23,7 @@ import com.template.evilgodxu.screens.home.HomeUiState
 import com.template.evilgodxu.screens.home.compact.content.ContentArea
 import com.template.evilgodxu.screens.home.compact.dialog.SettingsDialog
 
-// 紧凑视图空间分区组装器：标题栏 + 唯一内容分区，并承载专用设置弹窗
+// 紧凑布局组装器：标题栏 + 内容 + 设置弹窗
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompactAssembly(
@@ -31,8 +31,6 @@ fun CompactAssembly(
     uiState: HomeUiState,
     onShowSettings: () -> Unit = {},
     onHideSettings: () -> Unit = {},
-    onThemeModeChange: (String) -> Unit = {},
-    onLanguageChange: (String) -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
@@ -63,12 +61,6 @@ fun CompactAssembly(
     }
 
     if (uiState.showSettings) {
-        SettingsDialog(
-            themeMode = uiState.themeMode,
-            language = uiState.language,
-            onThemeModeChange = onThemeModeChange,
-            onLanguageChange = onLanguageChange,
-            onDismiss = onHideSettings,
-        )
+        SettingsDialog(onDismiss = onHideSettings)
     }
 }

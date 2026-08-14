@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
-// 职责组件：功能特性卡片
+// 功能特性卡片
 @Composable
 fun FeatureCardComponent(
     title: String,

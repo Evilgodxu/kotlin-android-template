@@ -20,7 +20,7 @@ import com.template.evilgodxu.R
 import com.template.evilgodxu.screens.home.compact.content.feature_card.FeatureCardComponent
 import com.template.evilgodxu.screens.home.compact.content.welcome_card.WelcomeCardComponent
 
-// 内容分区组装器：欢迎卡片 + 功能特性列表
+// 内容区：欢迎卡片 + 功能特性列表
 @Composable
 fun ContentArea(
     modifier: Modifier = Modifier,

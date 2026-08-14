@@ -1,14 +1,19 @@
 package com.template.evilgodxu.theme
 
-import android.os.Build
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+import com.template.evilgodxu.data.settings.ThemeMode
+import com.template.evilgodxu.data.settings.settingsFlow
 
 private val LightColorScheme = lightColorScheme(
     primary = md_theme_light_primary,
@@ -43,6 +48,8 @@ private val LightColorScheme = lightColorScheme(
     inverseOnSurface = md_theme_light_inverseOnSurface,
     inversePrimary = md_theme_light_inversePrimary,
     surfaceTint = md_theme_light_surfaceTint,
+    surfaceDim = md_theme_light_surfaceDim,
+    surfaceBright = md_theme_light_surfaceBright,
     outlineVariant = md_theme_light_outlineVariant,
     scrim = md_theme_light_scrim,
 )
@@ -80,6 +87,8 @@ private val DarkColorScheme = darkColorScheme(
     inverseOnSurface = md_theme_dark_inverseOnSurface,
     inversePrimary = md_theme_dark_inversePrimary,
     surfaceTint = md_theme_dark_surfaceTint,
+    surfaceDim = md_theme_dark_surfaceDim,
+    surfaceBright = md_theme_dark_surfaceBright,
     outlineVariant = md_theme_dark_outlineVariant,
     scrim = md_theme_dark_scrim,
 )
@@ -87,21 +96,32 @@ private val DarkColorScheme = darkColorScheme(
 @Composable
 fun MyApplicationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+    val context = LocalContext.current
+    val settings by context.settingsFlow().collectAsState(initial = null)
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val isDarkTheme = when (settings?.themeMode) {
+        ThemeMode.DARK -> true
+        ThemeMode.LIGHT -> false
+        else -> darkTheme
+    }
+
+    // 同步状态栏与导航栏图标颜色与主题
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            // view.context 可能非 Activity，判空避免崩溃
+            val window = (view.context as? Activity)?.window ?: return@SideEffect
+            WindowCompat.getInsetsController(window, view).apply {
+                isAppearanceLightStatusBars = !isDarkTheme
+                isAppearanceLightNavigationBars = !isDarkTheme
+            }
+        }
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme,
         typography = Typography,
         content = content,
     )

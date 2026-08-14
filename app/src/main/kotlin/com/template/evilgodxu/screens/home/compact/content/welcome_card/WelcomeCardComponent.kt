@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
 
-// 职责组件：欢迎卡片
+// 欢迎卡片
 @Composable
 fun WelcomeCardComponent(modifier: Modifier = Modifier) {
     Card(

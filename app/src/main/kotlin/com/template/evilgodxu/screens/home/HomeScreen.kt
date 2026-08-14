@@ -10,7 +10,7 @@ import com.template.evilgodxu.screens.home.expanded.ExpandedAssembly
 import com.template.evilgodxu.theme.rememberWindowSizeClass
 import org.koin.androidx.compose.koinViewModel
 
-// 路由入口：根据 WindowSizeClass 调用对应 Assembly
+// 根据 WindowSizeClass 选择紧凑或展开布局
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -23,8 +23,6 @@ fun HomeScreen(
         ExpandedAssembly(
             modifier = modifier,
             uiState = uiState,
-            onThemeModeChange = { homeViewModel.setThemeMode(it) },
-            onLanguageChange = { homeViewModel.setLanguage(it) },
             onTabSelected = { homeViewModel.selectTab(it) },
         )
     } else {
@@ -33,8 +31,6 @@ fun HomeScreen(
             uiState = uiState,
             onShowSettings = { homeViewModel.showSettings() },
             onHideSettings = { homeViewModel.hideSettings() },
-            onThemeModeChange = { homeViewModel.setThemeMode(it) },
-            onLanguageChange = { homeViewModel.setLanguage(it) },
         )
     }
 }

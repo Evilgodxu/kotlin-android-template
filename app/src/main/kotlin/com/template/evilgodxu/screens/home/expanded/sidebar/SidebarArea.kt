@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
 
-// 导航区组装器：侧边栏导航项列表
+// 侧边栏导航区
 @Composable
 fun SidebarArea(
     selectedTab: SidebarTab,

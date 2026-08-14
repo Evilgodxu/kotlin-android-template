@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
 import com.template.evilgodxu.screens.home.expanded.summary.feature_card.FeatureCardComponent
 
-// 摘要分区组装器：欢迎文案 + 功能特性列表
+// 摘要区：欢迎文案 + 功能特性列表
 @Composable
 fun SummaryArea(modifier: Modifier = Modifier) {
     Column(

@@ -10,6 +10,7 @@ val LocalWindowSizeClass = compositionLocalOf<WindowSizeClass> {
     error("WindowSizeClass not provided")
 }
 
+// 通过 CompositionLocal 提供 WindowSizeClass
 @Composable
 fun ProvideWindowSizeClass(content: @Composable () -> Unit) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass

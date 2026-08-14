@@ -2,16 +2,16 @@ package com.template.evilgodxu
 
 import android.content.Context
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -19,18 +19,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLocale
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.template.evilgodxu.data.repository.UserPreferencesRepository
-import com.template.evilgodxu.theme.ProvideWindowSizeClass
+import com.template.evilgodxu.data.settings.AppLanguage
+import com.template.evilgodxu.data.settings.appLanguageFlow
 import com.template.evilgodxu.navigation.AppNavHost
 import com.template.evilgodxu.theme.MyApplicationTheme
-import kotlinx.coroutines.flow.map
-import org.koin.android.ext.android.inject
+import com.template.evilgodxu.theme.ProvideWindowSizeClass
 import java.util.Locale
+import kotlinx.coroutines.flow.map
 
-// 单一 Activity
 class TemplateActivity : ComponentActivity() {
-    private val userPreferencesRepository: UserPreferencesRepository by inject()
     private lateinit var windowInsetsController: WindowInsetsControllerCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,46 +36,43 @@ class TemplateActivity : ComponentActivity() {
         setupSystemBars()
 
         setContent {
-            val themeMode by userPreferencesRepository.themeMode.collectAsStateWithLifecycle(initialValue = "system")
-
-            val darkTheme = when (themeMode) {
-                "light" -> false
-                "dark" -> true
-                else -> isSystemInDarkTheme()
-            }
-
-            SideEffect {
-                windowInsetsController.isAppearanceLightStatusBars = !darkTheme
-                windowInsetsController.isAppearanceLightNavigationBars = !darkTheme
-            }
-
-            val locale by userPreferencesRepository.language.map { resolveLocale(it) }
-                .collectAsState(initial = LocalLocale.current.platformLocale)
-            val localizedContext = createLocalizedContext(locale)
-
-            CompositionLocalProvider(LocalContext provides localizedContext) {
-                ProvideWindowSizeClass {
-                    MyApplicationTheme(darkTheme = darkTheme, dynamicColor = false) {
-                        Surface(
-                            modifier = Modifier.fillMaxSize(),
-                            color = MaterialTheme.colorScheme.background,
-                        ) {
-                            AppNavHost()
-                        }
-                    }
+            // Android 13+ 由系统按应用语言提供资源并自动重建界面；
+            // Android 12L 及以下从 DataStore 读语言并注入本地化上下文
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                TemplateContent()
+            } else {
+                val locale by LocalContext.current.appLanguageFlow()
+                    .map { resolveLocale(it) }
+                    .collectAsState(initial = LocalLocale.current.platformLocale)
+                CompositionLocalProvider(LocalContext provides createLocalizedContext(locale)) {
+                    TemplateContent()
                 }
             }
         }
     }
 
-    private fun resolveLocale(languageCode: String): Locale {
-        return when (languageCode) {
-            "zh" -> Locale.SIMPLIFIED_CHINESE
-            "en" -> Locale.ENGLISH
-            else -> Locale.getDefault()
+    @Composable
+    private fun TemplateContent() {
+        ProvideWindowSizeClass {
+            MyApplicationTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background,
+                ) {
+                    AppNavHost()
+                }
+            }
         }
     }
 
+    // 应用语言转 Locale
+    private fun resolveLocale(appLanguage: AppLanguage): Locale = when (appLanguage) {
+        AppLanguage.CHINESE -> Locale.SIMPLIFIED_CHINESE
+        AppLanguage.ENGLISH -> Locale.ENGLISH
+        AppLanguage.SYSTEM -> Locale.getDefault()
+    }
+
+    // 以指定语言创建本地化上下文
     private fun createLocalizedContext(locale: Locale): Context {
         val config = Configuration(resources.configuration)
         config.setLocale(locale)
@@ -91,6 +85,7 @@ class TemplateActivity : ComponentActivity() {
         updateSystemBarsVisibility()
     }
 
+    // 横屏隐藏系统栏，竖屏显示
     private fun updateSystemBarsVisibility() {
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
