@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLocale
@@ -41,8 +42,11 @@ class TemplateActivity : ComponentActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 TemplateContent()
             } else {
-                val locale by LocalContext.current.appLanguageFlow()
-                    .map { resolveLocale(it) }
+                val context = LocalContext.current
+                val localizedLocaleFlow = remember {
+                    context.appLanguageFlow().map { resolveLocale(it) }
+                }
+                val locale by localizedLocaleFlow
                     .collectAsState(initial = LocalLocale.current.platformLocale)
                 CompositionLocalProvider(LocalContext provides createLocalizedContext(locale)) {
                     TemplateContent()

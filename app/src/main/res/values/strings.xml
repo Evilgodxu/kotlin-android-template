@@ -20,6 +20,7 @@
     <string name="settings_language_title">语言</string>
     <string name="settings_section_appearance">外观</string>
     <string name="settings_section_language">语言</string>
+    <string name="settings_section_app_info">关于应用</string>
     <string name="settings_theme_dialog_title">选择主题</string>
     <string name="settings_language_dialog_title">选择语言</string>
 
@@ -35,4 +36,6 @@
 
     <!-- 通用 -->
     <string name="back">返回</string>
+    <string name="settings_version">版本 %1$s</string>
+    <string name="settings_selected">当前使用</string>
 </resources>

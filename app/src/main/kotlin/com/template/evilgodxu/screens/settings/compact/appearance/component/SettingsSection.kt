@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.components
+package com.template.evilgodxu.screens.settings.compact.appearance.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -13,27 +13,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// 设置分组标题组件
 @Composable
-fun SettingsSection(
-    title: String,
-    content: @Composable () -> Unit
-) {
+fun SettingsSection(title: String, content: @Composable () -> Unit) {
     Column {
         Text(
-            text = title,
-            style = MaterialTheme.typography.labelSmall.copy(
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 1.2.sp
-            ),
+            title,
+            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold, letterSpacing = 1.2.sp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(start = 4.dp, top = 20.dp, bottom = 10.dp)
+            modifier = Modifier.padding(start = 4.dp, top = 20.dp, bottom = 10.dp),
         )
         Card(
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         ) {
             Column { content() }
         }

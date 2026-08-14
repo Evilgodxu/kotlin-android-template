@@ -1,6 +1,6 @@
 package com.template.evilgodxu.theme
 
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -13,7 +13,7 @@ val LocalWindowSizeClass = compositionLocalOf<WindowSizeClass> {
 // 通过 CompositionLocal 提供 WindowSizeClass
 @Composable
 fun ProvideWindowSizeClass(content: @Composable () -> Unit) {
-    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val windowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
     CompositionLocalProvider(LocalWindowSizeClass provides windowSizeClass) {
         content()
     }

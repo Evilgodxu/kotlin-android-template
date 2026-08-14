@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 // 设置 DataStore
@@ -74,12 +75,14 @@ fun Context.appLanguageFlow(): Flow<AppLanguage> = settingsDataStore.data.map { 
 }
 
 // 读取当前应用语言
-fun Context.getAppLanguage(): AppLanguage {
+suspend fun Context.getAppLanguage(): AppLanguage {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         val locales = getSystemService(LocaleManager::class.java).applicationLocales
         return AppLanguage.fromLocaleList(locales)
     }
-    return AppLanguage.SYSTEM
+    return settingsDataStore.data.first().let { prefs ->
+        AppLanguage.entries.find { it.languageTag == prefs[SettingsKeys.LANGUAGE] } ?: AppLanguage.SYSTEM
+    }
 }
 
 // 设置应用语言：Android 13+ 交系统持久化，其余写入 DataStore

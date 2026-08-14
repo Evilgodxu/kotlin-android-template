@@ -14,6 +14,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    onOpenSettings: () -> Unit,
     homeViewModel: HomeViewModel = koinViewModel(),
 ) {
     val uiState by homeViewModel.state.collectAsStateWithLifecycle()
@@ -23,14 +24,13 @@ fun HomeScreen(
         ExpandedAssembly(
             modifier = modifier,
             uiState = uiState,
-            onTabSelected = { homeViewModel.selectTab(it) },
+            onOpenSettings = onOpenSettings,
         )
     } else {
         CompactAssembly(
             modifier = modifier,
             uiState = uiState,
-            onShowSettings = { homeViewModel.showSettings() },
-            onHideSettings = { homeViewModel.hideSettings() },
+            onOpenSettings = onOpenSettings,
         )
     }
 }
