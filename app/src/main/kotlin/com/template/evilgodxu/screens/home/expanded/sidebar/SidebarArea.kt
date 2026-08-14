@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screen.home.landscape.main_workspace.sidebar
+package com.template.evilgodxu.screens.home.expanded.sidebar
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,10 +16,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
 
+// 导航区组装器：侧边栏导航项列表
 @Composable
-fun LeftPanel(
-    selectedTab: LandscapeTab,
-    onTabSelected: (LandscapeTab) -> Unit,
+fun SidebarArea(
+    selectedTab: SidebarTab,
+    onTabSelected: (SidebarTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavigationRail(
@@ -28,8 +29,8 @@ fun LeftPanel(
         windowInsets = WindowInsets(0, 0, 0, 0),
     ) {
         NavigationRailItem(
-            selected = selectedTab == LandscapeTab.HOME,
-            onClick = { onTabSelected(LandscapeTab.HOME) },
+            selected = selectedTab == SidebarTab.HOME,
+            onClick = { onTabSelected(SidebarTab.HOME) },
             icon = {
                 Icon(
                     imageVector = Icons.Default.Home,
@@ -39,8 +40,8 @@ fun LeftPanel(
             label = { Text(stringResource(R.string.home_title)) },
         )
         NavigationRailItem(
-            selected = selectedTab == LandscapeTab.SETTINGS,
-            onClick = { onTabSelected(LandscapeTab.SETTINGS) },
+            selected = selectedTab == SidebarTab.SETTINGS,
+            onClick = { onTabSelected(SidebarTab.SETTINGS) },
             icon = {
                 Icon(
                     imageVector = Icons.Default.Settings,

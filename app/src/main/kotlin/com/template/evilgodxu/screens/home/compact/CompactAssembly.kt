@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screen.home.portrait
+package com.template.evilgodxu.screens.home.compact
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -7,19 +7,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.template.evilgodxu.screen.home.HomeUiState
-import com.template.evilgodxu.screen.home.portrait.middle_panel.MiddlePanel
-import com.template.evilgodxu.screen.home.portrait.top_toolbar.SettingsSheet
-import com.template.evilgodxu.screen.home.portrait.top_toolbar.TopToolbar
+import androidx.compose.ui.res.stringResource
+import com.template.evilgodxu.R
+import com.template.evilgodxu.screens.home.HomeUiState
+import com.template.evilgodxu.screens.home.compact.content.ContentArea
+import com.template.evilgodxu.screens.home.compact.dialog.SettingsDialog
 
-// 竖屏页面组装入口：决定空间分区的排列方式
+// 紧凑视图空间分区组装器：标题栏 + 唯一内容分区，并承载专用设置弹窗
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PortraitAssembly(
+fun CompactAssembly(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
     onShowSettings: () -> Unit = {},
@@ -29,7 +36,19 @@ fun PortraitAssembly(
 ) {
     Scaffold(
         modifier = modifier,
-        topBar = { TopToolbar(onShowSettings = onShowSettings) },
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.home_title)) },
+                actions = {
+                    IconButton(onClick = onShowSettings) {
+                        Icon(
+                            imageVector = Icons.Outlined.Settings,
+                            contentDescription = stringResource(R.string.settings_title),
+                        )
+                    }
+                },
+            )
+        },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { innerPadding ->
         Column(
@@ -39,12 +58,12 @@ fun PortraitAssembly(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
         ) {
-            MiddlePanel()
+            ContentArea()
         }
     }
 
     if (uiState.showSettings) {
-        SettingsSheet(
+        SettingsDialog(
             themeMode = uiState.themeMode,
             language = uiState.language,
             onThemeModeChange = onThemeModeChange,

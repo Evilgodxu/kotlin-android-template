@@ -1,9 +1,9 @@
-package com.template.evilgodxu.screen.home
+package com.template.evilgodxu.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.template.evilgodxu.data.repository.UserPreferencesRepository
-import com.template.evilgodxu.screen.home.landscape.main_workspace.sidebar.LandscapeTab
+import com.template.evilgodxu.screens.home.expanded.sidebar.SidebarTab
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,7 +47,7 @@ class HomeViewModel(
         _state.value = _state.value.copy(showSettings = false)
     }
 
-    fun selectTab(tab: LandscapeTab) {
+    fun selectTab(tab: SidebarTab) {
         _state.value = _state.value.copy(selectedTab = tab)
     }
 }

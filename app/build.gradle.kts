@@ -102,6 +102,17 @@ android {
     }
 }
 
+// 构建产物统一命名为 Template-<versionName>-arm64.apk
+val apkVersionName = android.defaultConfig.versionName ?: "0.0.0"
+
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.outputs.forEach { output ->
+            output.outputFileName.set("Template-$apkVersionName-arm64.apk")
+        }
+    }
+}
+
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.koin.bom))

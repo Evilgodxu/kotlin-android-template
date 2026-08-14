@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.template.evilgodxu.screen.home.HomeScreen
+import com.template.evilgodxu.screens.home.HomeScreen
 
 @Composable
 fun AppNavHost(

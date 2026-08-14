@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screen.home.landscape.main_workspace.home_summary
+package com.template.evilgodxu.screens.home.expanded.summary.feature_card
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -20,8 +20,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
+// 职责组件：功能特性卡片（展开视图样式）
 @Composable
-fun FeatureCard(
+fun FeatureCardComponent(
     title: String,
     description: String,
     icon: ImageVector,

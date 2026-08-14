@@ -21,7 +21,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.template.evilgodxu.data.repository.UserPreferencesRepository
-import com.template.evilgodxu.infrastructure.adaptive.ProvideWindowSizeClass
+import com.template.evilgodxu.theme.ProvideWindowSizeClass
 import com.template.evilgodxu.navigation.AppNavHost
 import com.template.evilgodxu.theme.MyApplicationTheme
 import kotlinx.coroutines.flow.map

@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screen.home.portrait.middle_panel.features
+package com.template.evilgodxu.screens.home.compact.content.feature_card
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,8 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
+// 职责组件：功能特性卡片
 @Composable
-fun FeatureCard(
+fun FeatureCardComponent(
     title: String,
     description: String,
     icon: ImageVector,

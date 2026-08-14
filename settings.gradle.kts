@@ -1,12 +1,16 @@
 pluginManagement {
     repositories {
-        // 插件优先走腾讯云镜像，避免 Gradle Plugin Portal 在国内网络下不可达
-        maven { url = uri("https://mirrors.cloud.tencent.com/nexus/repository/gradle-plugin/") }
+        // 插件与依赖优先走腾讯云镜像，Google 与 AndroidX 包由 google() 兜底
         maven { url = uri("https://mirrors.cloud.tencent.com/nexus/repository/maven-public/") }
-        maven { url = uri("https://mirrors.cloud.tencent.com/nexus/repository/google/") }
-        gradlePluginPortal()
+        maven { url = uri("https://mirrors.cloud.tencent.com/nexus/repository/gradle-plugins/") }
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
-        google()
     }
 }
 plugins {
@@ -16,8 +20,6 @@ plugins {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        // 依赖优先走腾讯云镜像，据称对新版 AndroidX 包同步更快
-        maven { url = uri("https://mirrors.cloud.tencent.com/nexus/repository/google/") }
         maven { url = uri("https://mirrors.cloud.tencent.com/nexus/repository/maven-public/") }
         google()
         mavenCentral()

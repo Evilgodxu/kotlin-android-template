@@ -1,6 +1,6 @@
-package com.template.evilgodxu.screen.home.landscape.main_workspace.sidebar
+package com.template.evilgodxu.screens.home.expanded.sidebar
 
-enum class LandscapeTab {
+enum class SidebarTab {
     HOME,
     SETTINGS,
 }

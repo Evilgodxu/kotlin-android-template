@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screen.home.portrait.middle_panel
+package com.template.evilgodxu.screens.home.compact.content
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,16 +17,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
-import com.template.evilgodxu.screen.home.portrait.middle_panel.features.FeatureCard
-import com.template.evilgodxu.screen.home.portrait.middle_panel.welcome_card.WelcomeCard
+import com.template.evilgodxu.screens.home.compact.content.feature_card.FeatureCardComponent
+import com.template.evilgodxu.screens.home.compact.content.welcome_card.WelcomeCardComponent
 
-// 竖屏中间工作区：欢迎卡片 + 功能特性
+// 内容分区组装器：欢迎卡片 + 功能特性列表
 @Composable
-fun MiddlePanel(
+fun ContentArea(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        WelcomeCard(
+        WelcomeCardComponent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -48,19 +48,19 @@ fun MiddlePanel(
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                FeatureCard(
+                FeatureCardComponent(
                     title = stringResource(R.string.home_feature_1),
                     description = stringResource(R.string.home_feature_1_desc),
                     icon = Icons.Default.DashboardCustomize,
                     modifier = Modifier.fillMaxWidth(),
                 )
-                FeatureCard(
+                FeatureCardComponent(
                     title = stringResource(R.string.home_feature_2),
                     description = stringResource(R.string.home_feature_2_desc),
                     icon = Icons.Default.Language,
                     modifier = Modifier.fillMaxWidth(),
                 )
-                FeatureCard(
+                FeatureCardComponent(
                     title = stringResource(R.string.home_feature_3),
                     description = stringResource(R.string.home_feature_3_desc),
                     icon = Icons.Default.Palette,

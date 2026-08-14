@@ -1,11 +1,11 @@
-package com.template.evilgodxu.screen.home
+package com.template.evilgodxu.screens.home
 
-import com.template.evilgodxu.screen.home.landscape.main_workspace.sidebar.LandscapeTab
+import com.template.evilgodxu.screens.home.expanded.sidebar.SidebarTab
 
 data class HomeUiState(
     val isLoading: Boolean = false,
     val themeMode: String = "system",
     val language: String = "system",
     val showSettings: Boolean = false,
-    val selectedTab: LandscapeTab = LandscapeTab.HOME,
+    val selectedTab: SidebarTab = SidebarTab.HOME,
 )

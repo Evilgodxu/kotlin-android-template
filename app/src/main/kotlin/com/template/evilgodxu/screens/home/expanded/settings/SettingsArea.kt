@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screen.home.landscape.main_workspace.settings
+package com.template.evilgodxu.screens.home.expanded.settings
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -35,8 +35,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
 
+// 设置分区组装器：主题与语言选择
 @Composable
-fun SettingsPanel(
+fun SettingsArea(
     themeMode: String,
     language: String,
     onThemeModeChange: (String) -> Unit,

@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screen.home.portrait.middle_panel.welcome_card
+package com.template.evilgodxu.screens.home.compact.content.welcome_card
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,8 +21,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
 
+// 职责组件：欢迎卡片
 @Composable
-fun WelcomeCard(modifier: Modifier = Modifier) {
+fun WelcomeCardComponent(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),

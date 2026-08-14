@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screen.home.portrait.top_toolbar
+package com.template.evilgodxu.screens.home.compact.dialog
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,7 +31,7 @@ import com.template.evilgodxu.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsSheet(
+fun SettingsDialog(
     themeMode: String,
     language: String,
     onThemeModeChange: (String) -> Unit,

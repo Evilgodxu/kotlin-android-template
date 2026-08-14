@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screen.home.portrait.top_toolbar
+package com.template.evilgodxu.screens.home.compact.dialog
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

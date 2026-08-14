@@ -1,9 +1,8 @@
-package com.template.evilgodxu.screen.home.landscape.main_workspace.home_summary
+package com.template.evilgodxu.screens.home.expanded.summary
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DashboardCustomize
@@ -16,9 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
+import com.template.evilgodxu.screens.home.expanded.summary.feature_card.FeatureCardComponent
 
+// 摘要分区组装器：欢迎文案 + 功能特性列表
 @Composable
-fun HomeSummary(modifier: Modifier = Modifier) {
+fun SummaryArea(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -42,17 +43,17 @@ fun HomeSummary(modifier: Modifier = Modifier) {
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            FeatureCard(
+            FeatureCardComponent(
                 title = stringResource(R.string.home_feature_1),
                 description = stringResource(R.string.home_feature_1_desc),
                 icon = Icons.Default.DashboardCustomize,
             )
-            FeatureCard(
+            FeatureCardComponent(
                 title = stringResource(R.string.home_feature_2),
                 description = stringResource(R.string.home_feature_2_desc),
                 icon = Icons.Default.Language,
             )
-            FeatureCard(
+            FeatureCardComponent(
                 title = stringResource(R.string.home_feature_3),
                 description = stringResource(R.string.home_feature_3_desc),
                 icon = Icons.Default.Palette,

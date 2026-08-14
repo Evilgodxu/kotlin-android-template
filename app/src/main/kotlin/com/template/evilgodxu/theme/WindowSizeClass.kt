@@ -1,4 +1,4 @@
-package com.template.evilgodxu.infrastructure.adaptive
+package com.template.evilgodxu.theme
 
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
