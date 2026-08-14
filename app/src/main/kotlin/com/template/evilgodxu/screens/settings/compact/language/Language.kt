@@ -10,22 +10,17 @@ import com.template.evilgodxu.screens.settings.compact.language.component.Settin
 import com.template.evilgodxu.screens.settings.compact.language.component.SettingsSection
 
 @Composable
-fun Language(language: AppLanguage, onLanguageSelected: (AppLanguage) -> Unit) {
+fun Language(language: AppLanguage, onLanguageSelected: (AppLanguage) -> Unit, onShowDialog: () -> Unit) {
     SettingsSection(title = stringResource(R.string.settings_section_language)) {
-        AppLanguage.entries.forEach { option ->
-            SettingsClickableItem(
-                icon = Icons.Default.Language,
-                title = languageName(option),
-                subtitle = if (language == option) stringResource(R.string.settings_selected) else "",
-                onClick = { onLanguageSelected(option) },
-            )
-        }
+        SettingsClickableItem(
+            icon = Icons.Default.Language,
+            title = stringResource(R.string.settings_language_title),
+            subtitle = when (language) {
+                AppLanguage.SYSTEM -> stringResource(R.string.language_system)
+                AppLanguage.CHINESE -> stringResource(R.string.language_chinese)
+                AppLanguage.ENGLISH -> stringResource(R.string.language_english)
+            },
+            onClick = onShowDialog,
+        )
     }
-}
-
-@Composable
-private fun languageName(language: AppLanguage): String = when (language) {
-    AppLanguage.SYSTEM -> stringResource(R.string.language_system)
-    AppLanguage.CHINESE -> stringResource(R.string.language_chinese)
-    AppLanguage.ENGLISH -> stringResource(R.string.language_english)
 }

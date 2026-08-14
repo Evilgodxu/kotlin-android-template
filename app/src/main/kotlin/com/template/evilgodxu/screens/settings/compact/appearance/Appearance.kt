@@ -13,28 +13,21 @@ import com.template.evilgodxu.screens.settings.compact.appearance.component.Sett
 @Composable
 fun Appearance(
     themeMode: ThemeMode,
-    onThemeSelected: (ThemeMode) -> Unit,
     onThemeClick: (Offset) -> Unit,
 ) {
     SettingsSection(title = stringResource(R.string.settings_section_appearance)) {
-        ThemeMode.entries.forEach { mode ->
-            SettingsClickableItem(
-                icon = Icons.Default.Palette,
-                title = themeName(mode),
-                subtitle = if (themeMode == mode) stringResource(R.string.settings_selected) else "",
-                onClick = { onThemeSelected(mode) },
-                onClickWithPosition = { position ->
-                    onThemeClick(position)
-                    onThemeSelected(mode)
-                },
-            )
-        }
+        SettingsClickableItem(
+            icon = Icons.Default.Palette,
+            title = stringResource(R.string.settings_theme_title),
+            subtitle = when (themeMode) {
+                ThemeMode.SYSTEM -> stringResource(R.string.theme_system)
+                ThemeMode.DARK -> stringResource(R.string.theme_dark)
+                ThemeMode.LIGHT -> stringResource(R.string.theme_light)
+            },
+            onClick = {},
+            onClickWithPosition = { position ->
+                onThemeClick(position)
+            },
+        )
     }
-}
-
-@Composable
-private fun themeName(mode: ThemeMode): String = when (mode) {
-    ThemeMode.SYSTEM -> stringResource(R.string.theme_system)
-    ThemeMode.DARK -> stringResource(R.string.theme_dark)
-    ThemeMode.LIGHT -> stringResource(R.string.theme_light)
 }

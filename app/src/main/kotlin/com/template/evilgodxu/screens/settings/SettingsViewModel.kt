@@ -44,9 +44,9 @@ class SettingsViewModel(
     }
 
     fun setLanguage(language: AppLanguage) {
+        _uiState.update { it.copy(language = language) }
         viewModelScope.launch {
             context.setAppLanguage(language)
-            _uiState.update { it.copy(language = language) }
         }
     }
 

@@ -153,7 +153,7 @@ fun MyApplicationTheme(
     LaunchedEffect(isDarkTheme, previousBitmap) {
         if (previousBitmap != null) {
             revealProgress.snapTo(0f)
-            revealProgress.animateTo(1f, tween(450))
+            revealProgress.animateTo(1f, tween(800))
             previousBitmap = null
         }
     }
