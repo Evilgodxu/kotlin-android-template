@@ -1,7 +1,6 @@
-package com.template.evilgodxu.screens.settings.expanded.app_info
+package com.template.evilgodxu.screens.settings.compact.appInfo
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,17 +22,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import com.template.evilgodxu.R
 
 private const val GITHUB_URL = "https://github.com/Evilgodxu/android-template"
 
 @Composable
-fun AppInfo(version: String) {
+fun AppInfoArea(version: String) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 32.dp),
+            .padding(top = 20.dp),
     ) {
         Text(
             text = "Evilgodxu",
@@ -60,7 +60,7 @@ fun AppInfo(version: String) {
             Row(
                 modifier = Modifier
                     .clickable {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_URL)))
+                        context.startActivity(Intent(Intent.ACTION_VIEW, GITHUB_URL.toUri()))
                     }
                     .padding(horizontal = 12.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically,

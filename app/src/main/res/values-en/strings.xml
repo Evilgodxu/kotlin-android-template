@@ -15,12 +15,10 @@
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
-    <string name="settings_subtitle">Customize theme and language preferences</string>
     <string name="settings_theme_title">Theme</string>
     <string name="settings_language_title">Language</string>
     <string name="settings_section_appearance">Appearance</string>
     <string name="settings_section_language">Language</string>
-    <string name="settings_section_app_info">App info</string>
     <string name="settings_theme_dialog_title">Select Theme</string>
     <string name="settings_language_dialog_title">Select Language</string>
 
@@ -37,5 +35,4 @@
     <!-- Common -->
     <string name="back">Back</string>
     <string name="settings_version">Version %1$s</string>
-    <string name="settings_selected">Selected</string>
 </resources>

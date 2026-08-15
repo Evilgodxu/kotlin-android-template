@@ -1,17 +1,11 @@
 package com.template.evilgodxu.data.settings
 
-import android.app.LocaleManager
 import android.content.Context
-import android.os.Build
 import android.os.LocaleList
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 
 // 设置 DataStore
 val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -51,52 +45,3 @@ enum class AppLanguage(val languageTag: String?) {
 data class SettingsState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
 )
-
-// 设置状态流：主题模式驱动全局配色
-fun Context.settingsFlow(): Flow<SettingsState> = settingsDataStore.data.map { preferences ->
-    SettingsState(
-        themeMode = ThemeMode.fromValue(preferences[SettingsKeys.THEME_MODE] ?: ThemeMode.SYSTEM.value),
-    )
-}
-
-fun Context.themeModeFlow(): Flow<ThemeMode> = settingsDataStore.data.map { preferences ->
-    ThemeMode.fromValue(preferences[SettingsKeys.THEME_MODE] ?: ThemeMode.SYSTEM.value)
-}
-
-suspend fun Context.saveThemeMode(mode: ThemeMode) {
-    settingsDataStore.edit { preferences ->
-        preferences[SettingsKeys.THEME_MODE] = mode.value
-    }
-}
-
-// Android 12L 及以下的语言流
-fun Context.appLanguageFlow(): Flow<AppLanguage> = settingsDataStore.data.map { preferences ->
-    AppLanguage.entries.find { it.languageTag == preferences[SettingsKeys.LANGUAGE] } ?: AppLanguage.SYSTEM
-}
-
-// 读取当前应用语言
-suspend fun Context.getAppLanguage(): AppLanguage {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        val locales = getSystemService(LocaleManager::class.java).applicationLocales
-        return AppLanguage.fromLocaleList(locales)
-    }
-    return settingsDataStore.data.first().let { prefs ->
-        AppLanguage.entries.find { it.languageTag == prefs[SettingsKeys.LANGUAGE] } ?: AppLanguage.SYSTEM
-    }
-}
-
-// 设置应用语言：Android 13+ 交系统持久化，其余写入 DataStore
-suspend fun Context.setAppLanguage(language: AppLanguage) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        val localeManager = getSystemService(LocaleManager::class.java)
-        localeManager.applicationLocales = if (language.languageTag != null) {
-            LocaleList.forLanguageTags(language.languageTag)
-        } else {
-            LocaleList.getEmptyLocaleList()
-        }
-    } else {
-        settingsDataStore.edit { preferences ->
-            preferences[SettingsKeys.LANGUAGE] = language.languageTag.orEmpty()
-        }
-    }
-}

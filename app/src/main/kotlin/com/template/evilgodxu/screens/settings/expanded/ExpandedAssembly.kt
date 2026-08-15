@@ -2,16 +2,14 @@ package com.template.evilgodxu.screens.settings.expanded
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,30 +26,32 @@ import com.template.evilgodxu.data.settings.ThemeMode
 import com.template.evilgodxu.screens.settings.SettingsUiState
 import com.template.evilgodxu.screens.settings.dialog.LanguageSelectionDialog
 import com.template.evilgodxu.screens.settings.dialog.ThemeSelectionDialog
-import com.template.evilgodxu.screens.settings.expanded.app_info.AppInfo
-import com.template.evilgodxu.screens.settings.expanded.appearance.Appearance
-import com.template.evilgodxu.screens.settings.expanded.language.Language
+import com.template.evilgodxu.screens.settings.expanded.appInfo.AppInfoArea
+import com.template.evilgodxu.screens.settings.expanded.appearance.AppearanceArea
+import com.template.evilgodxu.screens.settings.expanded.language.LanguageArea
 
+// 展开布局内容区组装器：设置内容
 @Composable
-fun ExpandedAssembly(
+fun SettingsExpandedAssembly(
     uiState: SettingsUiState,
-    onBack: () -> Unit,
     onThemeSelected: (ThemeMode) -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
     onThemeClick: (Offset) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var showThemeDialog by remember { mutableStateOf(false) }
     var showLanguageDialog by remember { mutableStateOf(false) }
     var pendingThemeClickPosition by remember { mutableStateOf(Offset.Zero) }
 
-    Row(modifier = Modifier.fillMaxSize()) {
-        IconButton(onClick = onBack, modifier = Modifier.padding(16.dp)) {
-            Icon(Icons.Default.ArrowBack, stringResource(R.string.back))
-        }
+    Scaffold(
+        modifier = modifier,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+    ) { innerPadding ->
         Column(
             modifier = Modifier
-                .weight(1f)
                 .fillMaxSize()
+                .consumeWindowInsets(innerPadding)
+                .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
                 .padding(top = 32.dp, end = 48.dp, bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -60,15 +60,15 @@ fun ExpandedAssembly(
                 text = stringResource(R.string.settings_title),
                 style = MaterialTheme.typography.headlineMedium,
             )
-            Appearance(
+            AppearanceArea(
                 themeMode = uiState.themeMode,
                 onThemeClick = { position ->
                     pendingThemeClickPosition = position
                     showThemeDialog = true
                 },
             )
-            Language(uiState.language, onLanguageSelected, onShowDialog = { showLanguageDialog = true })
-            AppInfo(uiState.version)
+            LanguageArea(uiState.language, onLanguageSelected, onShowDialog = { showLanguageDialog = true })
+            AppInfoArea(uiState.version)
         }
     }
 

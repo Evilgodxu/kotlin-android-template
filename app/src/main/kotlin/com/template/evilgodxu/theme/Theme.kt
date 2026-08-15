@@ -24,14 +24,14 @@ import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.core.view.drawToBitmap
 import androidx.core.view.WindowCompat
+import com.template.evilgodxu.data.repository.SettingsRepository
 import com.template.evilgodxu.data.settings.ThemeMode
-import com.template.evilgodxu.data.settings.settingsFlow
+import org.koin.compose.koinInject
 
 class ThemeTransitionController {
     var request: ((Offset) -> Unit)? = null
@@ -128,8 +128,8 @@ fun MyApplicationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val context = LocalContext.current
-    val settings by context.settingsFlow().collectAsState(initial = null)
+    val settingsRepository = koinInject<SettingsRepository>()
+    val settings by settingsRepository.settings.collectAsState(initial = null)
 
     val isDarkTheme = when (settings?.themeMode) {
         ThemeMode.DARK -> true

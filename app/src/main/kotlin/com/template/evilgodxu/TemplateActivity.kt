@@ -20,16 +20,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLocale
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.template.evilgodxu.data.repository.SettingsRepository
 import com.template.evilgodxu.data.settings.AppLanguage
-import com.template.evilgodxu.data.settings.appLanguageFlow
 import com.template.evilgodxu.navigation.AppNavHost
 import com.template.evilgodxu.theme.MyApplicationTheme
 import com.template.evilgodxu.theme.ProvideWindowSizeClass
 import java.util.Locale
 import kotlinx.coroutines.flow.map
+import org.koin.android.ext.android.inject
 
 class TemplateActivity : ComponentActivity() {
     private lateinit var windowInsetsController: WindowInsetsControllerCompat
+    private val settingsRepository: SettingsRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +46,7 @@ class TemplateActivity : ComponentActivity() {
             } else {
                 val context = LocalContext.current
                 val localizedLocaleFlow = remember {
-                    context.appLanguageFlow().map { resolveLocale(it) }
+                    settingsRepository.appLanguage.map { resolveLocale(it) }
                 }
                 val locale by localizedLocaleFlow
                     .collectAsState(initial = LocalLocale.current.platformLocale)

@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,9 +30,9 @@ import com.template.evilgodxu.data.settings.ThemeMode
 import com.template.evilgodxu.screens.settings.SettingsUiState
 import com.template.evilgodxu.screens.settings.dialog.LanguageSelectionDialog
 import com.template.evilgodxu.screens.settings.dialog.ThemeSelectionDialog
-import com.template.evilgodxu.screens.settings.compact.app_info.AppInfo
-import com.template.evilgodxu.screens.settings.compact.appearance.Appearance
-import com.template.evilgodxu.screens.settings.compact.language.Language
+import com.template.evilgodxu.screens.settings.compact.appInfo.AppInfoArea
+import com.template.evilgodxu.screens.settings.compact.appearance.AppearanceArea
+import com.template.evilgodxu.screens.settings.compact.language.LanguageArea
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,18 +42,20 @@ fun CompactAssembly(
     onThemeSelected: (ThemeMode) -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
     onThemeClick: (Offset) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var showThemeDialog by remember { mutableStateOf(false) }
     var showLanguageDialog by remember { mutableStateOf(false) }
     var pendingThemeClickPosition by remember { mutableStateOf(Offset.Zero) }
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.settings_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 },
             )
@@ -68,15 +70,15 @@ fun CompactAssembly(
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
-            Appearance(
+            AppearanceArea(
                 themeMode = uiState.themeMode,
                 onThemeClick = { position ->
                     pendingThemeClickPosition = position
                     showThemeDialog = true
                 },
             )
-            Language(uiState.language, onLanguageSelected, onShowDialog = { showLanguageDialog = true })
-            AppInfo(uiState.version)
+            LanguageArea(uiState.language, onLanguageSelected, onShowDialog = { showLanguageDialog = true })
+            AppInfoArea(uiState.version)
         }
     }
 

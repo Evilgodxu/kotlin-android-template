@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.expanded.appearance.component
+package com.template.evilgodxu.screens.settings.expanded.appearance.component.clickableItem
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures

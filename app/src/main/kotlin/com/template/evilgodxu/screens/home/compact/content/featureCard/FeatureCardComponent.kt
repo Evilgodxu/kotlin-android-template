@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.home.compact.content.feature_card
+package com.template.evilgodxu.screens.home.compact.content.featureCard
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

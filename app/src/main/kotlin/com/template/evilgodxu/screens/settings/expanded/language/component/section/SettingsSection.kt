@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.compact.language.component
+package com.template.evilgodxu.screens.settings.expanded.language.component.section
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

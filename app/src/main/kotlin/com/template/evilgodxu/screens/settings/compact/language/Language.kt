@@ -6,11 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.AppLanguage
-import com.template.evilgodxu.screens.settings.compact.language.component.SettingsClickableItem
-import com.template.evilgodxu.screens.settings.compact.language.component.SettingsSection
+import com.template.evilgodxu.screens.settings.compact.language.component.clickableItem.SettingsClickableItem
+import com.template.evilgodxu.screens.settings.compact.language.component.section.SettingsSection
 
 @Composable
-fun Language(language: AppLanguage, onLanguageSelected: (AppLanguage) -> Unit, onShowDialog: () -> Unit) {
+fun LanguageArea(language: AppLanguage, onLanguageSelected: (AppLanguage) -> Unit, onShowDialog: () -> Unit) {
     SettingsSection(title = stringResource(R.string.settings_section_language)) {
         SettingsClickableItem(
             icon = Icons.Default.Language,

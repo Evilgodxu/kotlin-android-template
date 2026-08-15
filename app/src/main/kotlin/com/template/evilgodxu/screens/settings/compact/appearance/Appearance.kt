@@ -7,14 +7,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.stringResource
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.ThemeMode
-import com.template.evilgodxu.screens.settings.compact.appearance.component.SettingsClickableItem
-import com.template.evilgodxu.screens.settings.compact.appearance.component.SettingsSection
+import com.template.evilgodxu.screens.settings.compact.appearance.component.clickableItem.SettingsClickableItem
+import com.template.evilgodxu.screens.settings.compact.appearance.component.section.SettingsSection
 
 @Composable
-fun Appearance(
-    themeMode: ThemeMode,
-    onThemeClick: (Offset) -> Unit,
-) {
+fun AppearanceArea(themeMode: ThemeMode, onThemeClick: (Offset) -> Unit) {
     SettingsSection(title = stringResource(R.string.settings_section_appearance)) {
         SettingsClickableItem(
             icon = Icons.Default.Palette,

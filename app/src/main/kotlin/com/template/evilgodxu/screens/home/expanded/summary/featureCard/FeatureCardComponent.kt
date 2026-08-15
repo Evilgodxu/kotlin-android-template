@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.home.expanded.summary.feature_card
+package com.template.evilgodxu.screens.home.expanded.summary.featureCard
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement

@@ -7,11 +7,11 @@ import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.ThemeMode
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Palette
-import com.template.evilgodxu.screens.settings.expanded.appearance.component.SettingsClickableItem
-import com.template.evilgodxu.screens.settings.expanded.appearance.component.SettingsSection
+import com.template.evilgodxu.screens.settings.expanded.appearance.component.clickableItem.SettingsClickableItem
+import com.template.evilgodxu.screens.settings.expanded.appearance.component.section.SettingsSection
 
 @Composable
-fun Appearance(themeMode: ThemeMode, onThemeClick: (Offset) -> Unit) {
+fun AppearanceArea(themeMode: ThemeMode, onThemeClick: (Offset) -> Unit) {
     SettingsSection(title = stringResource(R.string.settings_section_appearance)) {
         SettingsClickableItem(
             icon = Icons.Default.Palette,

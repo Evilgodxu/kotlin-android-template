@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
-import com.template.evilgodxu.screens.home.expanded.summary.feature_card.FeatureCardComponent
+import com.template.evilgodxu.screens.home.expanded.summary.featureCard.FeatureCardComponent
 
 // 摘要区：欢迎文案 + 功能特性列表
 @Composable

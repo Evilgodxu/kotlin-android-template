@@ -45,6 +45,13 @@ android {
         localeFilters += listOf("zh", "en")
     }
 
+    // 语言资源不分包，确保运行时语言切换可用
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
