@@ -1,12 +1,10 @@
 package com.template.evilgodxu.screens.home.compact
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,15 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.template.evilgodxu.R
-import com.template.evilgodxu.screens.home.HomeUiState
-import com.template.evilgodxu.screens.home.compact.content.ContentArea
 
-// 紧凑布局组装器：标题栏 + 内容 + 设置弹窗
+// 紧凑布局组装器：标题栏 + 空内容
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompactAssembly(
     modifier: Modifier = Modifier,
-    uiState: HomeUiState,
     onOpenSettings: () -> Unit = {},
 ) {
     Scaffold(
@@ -47,14 +42,11 @@ fun CompactAssembly(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .consumeWindowInsets(innerPadding)
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
-        ) {
-            ContentArea()
-        }
+                .padding(innerPadding),
+        )
     }
 }

@@ -3,15 +3,6 @@
 
     <!-- Home -->
     <string name="home_title">Home</string>
-    <string name="home_welcome">Welcome</string>
-    <string name="home_welcome_subtitle">Spatial Cognitive Architecture Example Template</string>
-    <string name="home_features_title">Features</string>
-    <string name="home_feature_1">Adaptive Layout</string>
-    <string name="home_feature_1_desc">Automatically adjusts layout based on screen size</string>
-    <string name="home_feature_2">Multi-language Support</string>
-    <string name="home_feature_2_desc">Switch between 简体中文 and English</string>
-    <string name="home_feature_3">Theme Switching</string>
-    <string name="home_feature_3_desc">Follow system, light, or dark mode</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>

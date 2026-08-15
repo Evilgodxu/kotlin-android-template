@@ -24,7 +24,6 @@ import com.template.evilgodxu.data.repository.SettingsRepository
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.navigation.AppNavHost
 import com.template.evilgodxu.theme.MyApplicationTheme
-import com.template.evilgodxu.theme.ProvideWindowSizeClass
 import java.util.Locale
 import kotlinx.coroutines.flow.map
 import org.koin.android.ext.android.inject
@@ -59,14 +58,12 @@ class TemplateActivity : ComponentActivity() {
 
     @Composable
     private fun TemplateContent() {
-        ProvideWindowSizeClass {
-            MyApplicationTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
-                ) {
-                    AppNavHost()
-                }
+        MyApplicationTheme {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background,
+            ) {
+                AppNavHost()
             }
         }
     }

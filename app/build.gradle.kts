@@ -147,11 +147,6 @@ dependencies {
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.preferences)
 
-    // 自适应布局
-    implementation(libs.androidx.material3.adaptive)
-    implementation(libs.androidx.material3.adaptive.layout)
-    implementation(libs.androidx.material3.adaptive.navigation)
-
     // Kotlin Serialization
     implementation(libs.kotlinx.serialization.json)
 
