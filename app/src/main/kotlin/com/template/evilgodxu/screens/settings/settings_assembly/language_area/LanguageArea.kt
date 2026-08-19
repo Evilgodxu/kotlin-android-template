@@ -1,7 +1,5 @@
 package com.template.evilgodxu.screens.settings.settings_assembly.language_area
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Language
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.template.evilgodxu.R
@@ -14,7 +12,7 @@ import com.template.evilgodxu.screens.settings.settings_assembly.component.secti
 fun LanguageArea(language: AppLanguage, onLanguageSelected: (AppLanguage) -> Unit, onShowDialog: () -> Unit) {
     SettingsSection(title = stringResource(R.string.settings_section_language)) {
         SettingsClickableItem(
-            icon = Icons.Default.Language,
+            icon = R.drawable.ic_language,
             title = stringResource(R.string.settings_language_title),
             subtitle = when (language) {
                 AppLanguage.SYSTEM -> stringResource(R.string.language_system)

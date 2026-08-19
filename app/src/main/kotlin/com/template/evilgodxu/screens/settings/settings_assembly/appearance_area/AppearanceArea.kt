@@ -1,7 +1,5 @@
 package com.template.evilgodxu.screens.settings.settings_assembly.appearance_area
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Palette
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.stringResource
@@ -15,7 +13,7 @@ import com.template.evilgodxu.screens.settings.settings_assembly.component.secti
 fun AppearanceArea(themeMode: ThemeMode, onThemeClick: (Offset) -> Unit) {
     SettingsSection(title = stringResource(R.string.settings_section_appearance)) {
         SettingsClickableItem(
-            icon = Icons.Default.Palette,
+            icon = R.drawable.ic_palette,
             title = stringResource(R.string.settings_theme_title),
             subtitle = when (themeMode) {
                 ThemeMode.SYSTEM -> stringResource(R.string.theme_system)
