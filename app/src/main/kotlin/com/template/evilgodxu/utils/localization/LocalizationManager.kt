@@ -1,5 +1,6 @@
 package com.template.evilgodxu.utils.localization
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -30,6 +31,14 @@ class LocalizationManager(
 ) {
     val localeFlow: Flow<Locale> = settingsRepository.appLanguage.map { it.toLocale() }
 
+    // 当前 Activity 引用，用于对话框等独立窗口同步语言
+    private var activity: Activity? = null
+
+    // 绑定当前 Activity，单 Activity 应用在 onCreate 时注册
+    fun bindActivity(activity: Activity) {
+        this.activity = activity
+    }
+
     // 以指定语言创建本地化上下文
     fun createLocalizedContext(locale: Locale): Context {
         val config = Configuration(context.resources.configuration).apply {
@@ -38,9 +47,11 @@ class LocalizationManager(
         return context.createConfigurationContext(config)
     }
 
-    // 同步更新 app 层 Resources 与默认 Locale，使 Dialog/Toast 等跟随语言
+    // 同步更新 app 层与 activity 层 Resources 及默认 Locale，
+    // 使 Dialog/Toast 等使用窗口 context 的资源跟随语言
     fun applyAppLocale(locale: Locale) {
         applyToResources(context.applicationContext.resources, locale)
+        activity?.let { applyToResources(it.resources, locale) }
         Locale.setDefault(locale)
     }
 
