@@ -16,7 +16,7 @@
     <string name="settings_section_appearance">Appearance</string>
     <string name="settings_section_language">Language</string>
     <string name="settings_theme_dialog_title">Select Theme</string>
-    <string name="settings_language_dialog_title">Select Language</string>
+    <string name="settings_language_dialog_title">Language</string>
 
     <!-- Theme options -->
     <string name="theme_system">System</string>
