@@ -56,6 +56,11 @@ class TemplateActivity : ComponentActivity() {
         }
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        updateSystemBarsVisibility()
+    }
+
     @Composable
     private fun TemplateContent() {
         MyApplicationTheme {

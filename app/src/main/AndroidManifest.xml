@@ -16,6 +16,7 @@
         android:theme="@style/Theme.MyApplication">
         <activity
             android:name=".TemplateActivity"
+            android:configChanges="locale|layoutDirection"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
