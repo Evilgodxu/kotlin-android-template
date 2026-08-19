@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.compact.appearance.component.clickableItem
+package com.template.evilgodxu.screens.settings.settings_assembly.component.clickableItem
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -26,6 +26,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+// 设置项：可点击列表项，支持返回点击坐标以驱动主题切换动效
 @Composable
 fun SettingsClickableItem(
     icon: ImageVector,

@@ -96,9 +96,4 @@ class TemplateActivity : ComponentActivity() {
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         }
     }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        updateSystemBarsVisibility()
-    }
 }

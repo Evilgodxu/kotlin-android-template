@@ -5,11 +5,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.template.evilgodxu.screens.settings.compact.CompactAssembly
+import com.template.evilgodxu.screens.settings.settings_assembly.SettingsAssembly
 import com.template.evilgodxu.theme.LocalThemeTransitionController
 import org.koin.androidx.compose.koinViewModel
 
-// 紧凑布局页面入口
+// 页面入口：编排设置页分区
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
@@ -18,7 +18,7 @@ fun SettingsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val onThemeClick: (Offset) -> Unit = LocalThemeTransitionController.current::revealAt
-    CompactAssembly(
+    SettingsAssembly(
         uiState = uiState,
         onBack = onBack,
         onThemeSelected = viewModel::setThemeMode,

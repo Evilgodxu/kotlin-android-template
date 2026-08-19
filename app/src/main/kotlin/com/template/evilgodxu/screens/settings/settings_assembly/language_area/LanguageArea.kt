@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.compact.language
+package com.template.evilgodxu.screens.settings.settings_assembly.language_area
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Language
@@ -6,9 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.AppLanguage
-import com.template.evilgodxu.screens.settings.compact.language.component.clickableItem.SettingsClickableItem
-import com.template.evilgodxu.screens.settings.compact.language.component.section.SettingsSection
+import com.template.evilgodxu.screens.settings.settings_assembly.component.clickableItem.SettingsClickableItem
+import com.template.evilgodxu.screens.settings.settings_assembly.component.section.SettingsSection
 
+// 语言分区
 @Composable
 fun LanguageArea(language: AppLanguage, onLanguageSelected: (AppLanguage) -> Unit, onShowDialog: () -> Unit) {
     SettingsSection(title = stringResource(R.string.settings_section_language)) {

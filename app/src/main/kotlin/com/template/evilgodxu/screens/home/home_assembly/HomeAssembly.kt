@@ -1,10 +1,12 @@
-package com.template.evilgodxu.screens.home.compact
+package com.template.evilgodxu.screens.home.home_assembly
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,12 +18,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
+import com.template.evilgodxu.screens.home.home_assembly.about_area.AboutArea
+import com.template.evilgodxu.screens.home.home_assembly.welcome_area.WelcomeArea
 
-// 紧凑布局组装器：标题栏 + 空内容
+// 首页分区组装器：编排欢迎与简介分区
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CompactAssembly(
+fun HomeAssembly(
     modifier: Modifier = Modifier,
     onOpenSettings: () -> Unit = {},
 ) {
@@ -42,11 +47,16 @@ fun CompactAssembly(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { innerPadding ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .consumeWindowInsets(innerPadding)
-                .padding(innerPadding),
-        )
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            WelcomeArea()
+            AboutArea()
+        }
     }
 }

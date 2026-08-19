@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.compact.appearance.component.section
+package com.template.evilgodxu.screens.settings.settings_assembly.component.section
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+// 设置页分区卡片容器
 @Composable
 fun SettingsSection(title: String, content: @Composable () -> Unit) {
     Column {

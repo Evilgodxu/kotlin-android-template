@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.compact.appearance
+package com.template.evilgodxu.screens.settings.settings_assembly.appearance_area
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Palette
@@ -7,9 +7,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.stringResource
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.ThemeMode
-import com.template.evilgodxu.screens.settings.compact.appearance.component.clickableItem.SettingsClickableItem
-import com.template.evilgodxu.screens.settings.compact.appearance.component.section.SettingsSection
+import com.template.evilgodxu.screens.settings.settings_assembly.component.clickableItem.SettingsClickableItem
+import com.template.evilgodxu.screens.settings.settings_assembly.component.section.SettingsSection
 
+// 外观分区
 @Composable
 fun AppearanceArea(themeMode: ThemeMode, onThemeClick: (Offset) -> Unit) {
     SettingsSection(title = stringResource(R.string.settings_section_appearance)) {

@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.compact
+package com.template.evilgodxu.screens.settings.settings_assembly
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,13 +31,14 @@ import com.template.evilgodxu.data.settings.ThemeMode
 import com.template.evilgodxu.screens.settings.SettingsUiState
 import com.template.evilgodxu.screens.settings.dialog.LanguageSelectionDialog
 import com.template.evilgodxu.screens.settings.dialog.ThemeSelectionDialog
-import com.template.evilgodxu.screens.settings.compact.appInfo.AppInfoArea
-import com.template.evilgodxu.screens.settings.compact.appearance.AppearanceArea
-import com.template.evilgodxu.screens.settings.compact.language.LanguageArea
+import com.template.evilgodxu.screens.settings.settings_assembly.app_info_area.AppInfoArea
+import com.template.evilgodxu.screens.settings.settings_assembly.appearance_area.AppearanceArea
+import com.template.evilgodxu.screens.settings.settings_assembly.language_area.LanguageArea
 
+// 设置页分区组装器：编排外观、语言与关于分区
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CompactAssembly(
+fun SettingsAssembly(
     uiState: SettingsUiState,
     onBack: () -> Unit,
     onThemeSelected: (ThemeMode) -> Unit,
@@ -46,7 +48,15 @@ fun CompactAssembly(
 ) {
     var showThemeDialog by remember { mutableStateOf(false) }
     var showLanguageDialog by remember { mutableStateOf(false) }
+    var pendingLanguage by remember { mutableStateOf<AppLanguage?>(null) }
     var pendingThemeClickPosition by remember { mutableStateOf(Offset.Zero) }
+
+    // 先关闭对话框，下一帧再切语言，避免切换瞬间闪现旧语言
+    LaunchedEffect(pendingLanguage) {
+        val language = pendingLanguage ?: return@LaunchedEffect
+        pendingLanguage = null
+        onLanguageSelected(language)
+    }
 
     Scaffold(
         modifier = modifier,
@@ -99,8 +109,8 @@ fun CompactAssembly(
             currentLanguage = uiState.language,
             onDismiss = { showLanguageDialog = false },
             onLanguageSelected = { language ->
-                onLanguageSelected(language)
                 showLanguageDialog = false
+                pendingLanguage = language
             },
         )
     }

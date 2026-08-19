@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.compact.appInfo
+package com.template.evilgodxu.screens.settings.settings_assembly.app_info_area
 
 import android.content.Intent
 import androidx.compose.foundation.clickable
@@ -25,8 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.template.evilgodxu.R
 
-private const val GITHUB_URL = "https://github.com/Evilgodxu/android-template"
-
+// 关于分区：应用信息
 @Composable
 fun AppInfoArea(version: String) {
     val context = LocalContext.current
@@ -82,3 +81,5 @@ fun AppInfoArea(version: String) {
         }
     }
 }
+
+private const val GITHUB_URL = "https://github.com/Evilgodxu/android-template"

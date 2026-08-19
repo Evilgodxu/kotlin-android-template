@@ -2,15 +2,15 @@ package com.template.evilgodxu.screens.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.template.evilgodxu.screens.home.compact.CompactAssembly
+import com.template.evilgodxu.screens.home.home_assembly.HomeAssembly
 
-// 紧凑布局页面入口
+// 页面入口：编排首页分区
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onOpenSettings: () -> Unit,
 ) {
-    CompactAssembly(
+    HomeAssembly(
         modifier = modifier,
         onOpenSettings = onOpenSettings,
     )
