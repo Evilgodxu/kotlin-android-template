@@ -1,7 +1,6 @@
 package com.template.evilgodxu.data.settings
 
 import android.content.Context
-import android.os.LocaleList
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -12,7 +11,7 @@ val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(na
 
 object SettingsKeys {
     val THEME_MODE = stringPreferencesKey("theme_mode")
-    // Android 12L 及以下无 LocaleManager，语言落 DataStore
+    // 语言统一落 DataStore，由 Compose 层驱动热切换
     val LANGUAGE = stringPreferencesKey("language")
 }
 
@@ -27,19 +26,11 @@ enum class ThemeMode(val value: String) {
     }
 }
 
-// 应用语言：Android 13+ 由系统 LocaleManager 管理并持久化
+// 应用语言：中文/英文/跟随系统
 enum class AppLanguage(val languageTag: String?) {
     SYSTEM(null),
     CHINESE("zh"),
     ENGLISH("en");
-
-    companion object {
-        fun fromLocaleList(localeList: LocaleList): AppLanguage {
-            if (localeList.isEmpty) return SYSTEM
-            val tag = localeList[0].toLanguageTag()
-            return entries.find { it.languageTag == tag } ?: SYSTEM
-        }
-    }
 }
 
 data class SettingsState(

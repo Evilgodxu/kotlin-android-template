@@ -1,9 +1,6 @@
 package com.template.evilgodxu.data.repository
 
-import android.app.LocaleManager
 import android.content.Context
-import android.os.Build
-import android.os.LocaleList
 import androidx.datastore.preferences.core.edit
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.SettingsKeys
@@ -24,7 +21,7 @@ class SettingsRepository(private val context: Context) {
         )
     }
 
-    // 应用语言流：Android 12L 及以下读 DataStore，更高版本交系统
+    // 应用语言流：统一读 DataStore
     val appLanguage: Flow<AppLanguage> = context.settingsDataStore.data.map { preferences ->
         AppLanguage.entries.find { it.languageTag == preferences[SettingsKeys.LANGUAGE] } ?: AppLanguage.SYSTEM
     }
@@ -37,28 +34,15 @@ class SettingsRepository(private val context: Context) {
 
     // 读取当前应用语言
     suspend fun getAppLanguage(): AppLanguage {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val locales = context.getSystemService(LocaleManager::class.java).applicationLocales
-            return AppLanguage.fromLocaleList(locales)
-        }
-        return context.settingsDataStore.data.first().let { prefs ->
-            AppLanguage.entries.find { it.languageTag == prefs[SettingsKeys.LANGUAGE] } ?: AppLanguage.SYSTEM
+        return context.settingsDataStore.data.first().let { preferences ->
+            AppLanguage.entries.find { it.languageTag == preferences[SettingsKeys.LANGUAGE] } ?: AppLanguage.SYSTEM
         }
     }
 
-    // 设置应用语言：Android 13+ 交系统持久化，其余写入 DataStore
+    // 设置应用语言：统一写入 DataStore，由 Compose 层驱动热切换
     suspend fun setAppLanguage(language: AppLanguage) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val localeManager = context.getSystemService(LocaleManager::class.java)
-            localeManager.applicationLocales = if (language.languageTag != null) {
-                LocaleList.forLanguageTags(language.languageTag)
-            } else {
-                LocaleList.getEmptyLocaleList()
-            }
-        } else {
-            context.settingsDataStore.edit { preferences ->
-                preferences[SettingsKeys.LANGUAGE] = language.languageTag.orEmpty()
-            }
+        context.settingsDataStore.edit { preferences ->
+            preferences[SettingsKeys.LANGUAGE] = language.languageTag.orEmpty()
         }
     }
 }

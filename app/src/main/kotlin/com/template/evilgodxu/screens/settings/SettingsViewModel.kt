@@ -6,18 +6,23 @@ import androidx.lifecycle.viewModelScope
 import com.template.evilgodxu.data.repository.SettingsRepository
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.ThemeMode
+import com.template.evilgodxu.utils.localization.LocalizationManager
+import com.template.evilgodxu.utils.localization.toLocale
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class SettingsViewModel(
     application: Application,
     private val settingsRepository: SettingsRepository,
-) : AndroidViewModel(application) {
+) : AndroidViewModel(application), KoinComponent {
 
     private val context get() = getApplication<Application>()
+    private val localizationManager: LocalizationManager by inject()
 
     private val _uiState = MutableStateFlow(
         SettingsUiState(version = getVersion()),
@@ -43,6 +48,7 @@ class SettingsViewModel(
 
     fun setLanguage(language: AppLanguage) {
         _uiState.update { it.copy(language = language) }
+        localizationManager.applyAppLocale(language.toLocale())
         viewModelScope.launch {
             settingsRepository.setAppLanguage(language)
         }

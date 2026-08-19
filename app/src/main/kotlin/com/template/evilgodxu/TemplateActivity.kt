@@ -2,8 +2,8 @@ package com.template.evilgodxu
 
 import android.content.Context
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
+import android.os.LocaleList
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,26 +11,31 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLocale
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.template.evilgodxu.data.repository.SettingsRepository
-import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.navigation.AppNavHost
 import com.template.evilgodxu.theme.MyApplicationTheme
-import java.util.Locale
-import kotlinx.coroutines.flow.map
+import com.template.evilgodxu.utils.localization.LocalizationManager
+import com.template.evilgodxu.utils.localization.ProvideLocalizedContext
+import com.template.evilgodxu.utils.localization.toLocale
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 
 class TemplateActivity : ComponentActivity() {
     private lateinit var windowInsetsController: WindowInsetsControllerCompat
-    private val settingsRepository: SettingsRepository by inject()
+    private val localizationManager: LocalizationManager by inject()
+
+    // 冷启动按持久化语言创建配置上下文，进入界面即正确语言
+    override fun attachBaseContext(newBase: Context) {
+        val locale = runBlocking { SettingsRepository(newBase).appLanguage.first() }.toLocale()
+        val config = Configuration(newBase.resources.configuration).apply {
+            setLocales(LocaleList(locale))
+        }
+        super.attachBaseContext(newBase.createConfigurationContext(config))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,20 +43,8 @@ class TemplateActivity : ComponentActivity() {
         setupSystemBars()
 
         setContent {
-            // Android 13+ 由系统按应用语言提供资源并自动重建界面；
-            // Android 12L 及以下从 DataStore 读语言并注入本地化上下文
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ProvideLocalizedContext(localizationManager) {
                 TemplateContent()
-            } else {
-                val context = LocalContext.current
-                val localizedLocaleFlow = remember {
-                    settingsRepository.appLanguage.map { resolveLocale(it) }
-                }
-                val locale by localizedLocaleFlow
-                    .collectAsState(initial = LocalLocale.current.platformLocale)
-                CompositionLocalProvider(LocalContext provides createLocalizedContext(locale)) {
-                    TemplateContent()
-                }
             }
         }
     }
@@ -71,20 +64,6 @@ class TemplateActivity : ComponentActivity() {
                 AppNavHost()
             }
         }
-    }
-
-    // 应用语言转 Locale
-    private fun resolveLocale(appLanguage: AppLanguage): Locale = when (appLanguage) {
-        AppLanguage.CHINESE -> Locale.SIMPLIFIED_CHINESE
-        AppLanguage.ENGLISH -> Locale.ENGLISH
-        AppLanguage.SYSTEM -> Locale.getDefault()
-    }
-
-    // 以指定语言创建本地化上下文
-    private fun createLocalizedContext(locale: Locale): Context {
-        val config = Configuration(resources.configuration)
-        config.setLocale(locale)
-        return createConfigurationContext(config)
     }
 
     private fun setupSystemBars() {
