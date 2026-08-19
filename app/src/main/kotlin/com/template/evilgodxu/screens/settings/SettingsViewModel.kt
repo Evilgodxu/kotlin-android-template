@@ -7,7 +7,6 @@ import com.template.evilgodxu.data.repository.SettingsRepository
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.ThemeMode
 import com.template.evilgodxu.utils.localization.LocalizationManager
-import com.template.evilgodxu.utils.localization.toLocale
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -48,7 +47,7 @@ class SettingsViewModel(
 
     fun setLanguage(language: AppLanguage) {
         _uiState.update { it.copy(language = language) }
-        localizationManager.applyAppLocale(language.toLocale())
+        localizationManager.applyAppLocale(localizationManager.resolveLanguage(language))
         viewModelScope.launch {
             settingsRepository.setAppLanguage(language)
         }

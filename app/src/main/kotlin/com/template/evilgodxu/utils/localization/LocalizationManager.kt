@@ -17,9 +17,9 @@ import java.util.Locale
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-// 应用语言转 Locale
-fun AppLanguage.toLocale(): Locale = when (this) {
-    AppLanguage.SYSTEM -> Locale.getDefault()
+// 应用语言转 Locale；systemLocale 为跟随系统时的实际语言
+fun AppLanguage.toLocale(systemLocale: Locale = Locale.getDefault()): Locale = when (this) {
+    AppLanguage.SYSTEM -> systemLocale
     AppLanguage.CHINESE -> Locale.SIMPLIFIED_CHINESE
     AppLanguage.ENGLISH -> Locale.ENGLISH
 }
@@ -29,7 +29,14 @@ class LocalizationManager(
     private val context: Context,
     private val settingsRepository: SettingsRepository,
 ) {
-    val localeFlow: Flow<Locale> = settingsRepository.appLanguage.map { it.toLocale() }
+    // 构造时捕获系统语言。此时进程默认语言尚未被应用内切换改写，
+    // 确保跟随系统始终解析为真实系统语言
+    private val systemLocale: Locale = Locale.getDefault()
+
+    val localeFlow: Flow<Locale> = settingsRepository.appLanguage.map { it.toLocale(systemLocale) }
+
+    // 供切换语言时按当前语言解析 Locale
+    fun resolveLanguage(language: AppLanguage): Locale = language.toLocale(systemLocale)
 
     // 当前 Activity 引用，用于对话框等独立窗口同步语言
     private var activity: Activity? = null
