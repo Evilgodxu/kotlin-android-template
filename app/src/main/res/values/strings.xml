@@ -30,5 +30,6 @@
 
     <!-- 通用 -->
     <string name="back">返回</string>
+    <string name="exit_hint">再按一次退出</string>
     <string name="settings_version">版本 %1$s</string>
 </resources>
