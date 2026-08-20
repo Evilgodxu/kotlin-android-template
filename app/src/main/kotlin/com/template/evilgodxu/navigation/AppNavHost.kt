@@ -14,16 +14,17 @@ fun AppNavHost(
     modifier: Modifier = Modifier,
 ) {
     val backStack = rememberNavBackStack(Home)
+    val goBack = { if (backStack.size > 1) backStack.removeLastOrNull() }
 
     NavDisplay(
         backStack = backStack,
-        onBack = { backStack.removeLastOrNull() },
+        onBack = goBack,
         modifier = modifier,
         entryProvider = { key ->
             when (key) {
                 is Home -> NavEntry(key) { HomeScreen(onOpenSettings = { backStack.add(Settings) }) }
                 is Settings -> NavEntry(key) {
-                    SettingsScreen(onBack = { backStack.removeLastOrNull() })
+                    SettingsScreen(onBack = goBack)
                 }
                 else -> error("Unknown NavKey: $key")
             }
