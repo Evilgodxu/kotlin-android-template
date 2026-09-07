@@ -1,13 +1,6 @@
 package com.template.evilgodxu.data.settings
 
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-
-// 设置 DataStore
-val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 object SettingsKeys {
     val THEME_MODE = stringPreferencesKey("theme_mode")
