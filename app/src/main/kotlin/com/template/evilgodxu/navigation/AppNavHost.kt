@@ -2,6 +2,7 @@ package com.template.evilgodxu.navigation
 
 import android.os.SystemClock
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,17 +32,24 @@ fun AppNavHost(
     val context = LocalContext.current
     var lastRootBackAt by rememberSaveable { mutableLongStateOf(0L) }
     val exitHint = stringResource(R.string.exit_hint)
+
+    // 页面返回：只在非根页面弹栈（NavDisplay 的系统返回回调与设置页顶栏返回按钮共用）
     val goBack: () -> Unit = {
         if (backStack.size > 1) {
             backStack.removeLastOrNull()
+        }
+    }
+
+    // 根页面（Home）的系统返回：双击退出。
+    // NavDisplay 内置返回处理仅在场景有上级条目（previousEntries 非空）时启用，
+    // 根页面不会回调 onBack，因此退出逻辑必须在此单独拦截，否则按一次返回即退出。
+    BackHandler(enabled = backStack.size == 1) {
+        val now = SystemClock.uptimeMillis()
+        if (now - lastRootBackAt <= EXIT_CONFIRM_WINDOW_MS) {
+            activity?.finish()
         } else {
-            val now = SystemClock.uptimeMillis()
-            if (now - lastRootBackAt <= EXIT_CONFIRM_WINDOW_MS) {
-                activity?.finish()
-            } else {
-                lastRootBackAt = now
-                Toast.makeText(context, exitHint, Toast.LENGTH_SHORT).show()
-            }
+            lastRootBackAt = now
+            Toast.makeText(context, exitHint, Toast.LENGTH_SHORT).show()
         }
     }
 
