@@ -14,7 +14,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,15 +46,7 @@ fun SettingsAssembly(
 ) {
     var showThemeDialog by remember { mutableStateOf(false) }
     var showLanguageDialog by remember { mutableStateOf(false) }
-    var pendingLanguage by remember { mutableStateOf<AppLanguage?>(null) }
     var pendingThemeClickPosition by remember { mutableStateOf(Offset.Zero) }
-
-    // 先关闭对话框，下一帧再切语言，避免切换瞬间闪现旧语言
-    LaunchedEffect(pendingLanguage) {
-        val language = pendingLanguage ?: return@LaunchedEffect
-        pendingLanguage = null
-        onLanguageSelected(language)
-    }
 
     Scaffold(
         modifier = modifier,
@@ -109,7 +100,7 @@ fun SettingsAssembly(
             onDismiss = { showLanguageDialog = false },
             onLanguageSelected = { language ->
                 showLanguageDialog = false
-                pendingLanguage = language
+                onLanguageSelected(language)
             },
         )
     }

@@ -8,22 +8,18 @@ import androidx.lifecycle.viewModelScope
 import com.template.evilgodxu.data.repository.SettingsRepository
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.ThemeMode
-import com.template.evilgodxu.utils.localization.LocalizationManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class SettingsViewModel(
     application: Application,
     private val settingsRepository: SettingsRepository,
-) : AndroidViewModel(application), KoinComponent {
+) : AndroidViewModel(application) {
 
     private val context get() = getApplication<Application>()
-    private val localizationManager: LocalizationManager by inject()
 
     private val _uiState = MutableStateFlow(
         SettingsUiState(version = getVersion()),
@@ -31,6 +27,7 @@ class SettingsViewModel(
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     init {
+        // 主题由 DataStore 流驱动；语言切换后由同一个数据源回流更新 UI
         viewModelScope.launch {
             settingsRepository.settings.collect { settings ->
                 _uiState.update { it.copy(themeMode = settings.themeMode) }
@@ -48,8 +45,6 @@ class SettingsViewModel(
     }
 
     fun setLanguage(language: AppLanguage) {
-        _uiState.update { it.copy(language = language) }
-        localizationManager.applyAppLocale(localizationManager.resolveLanguage(language))
         viewModelScope.launch {
             settingsRepository.setAppLanguage(language)
         }

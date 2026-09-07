@@ -41,8 +41,6 @@ class TemplateActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setupSystemBars()
-        // 绑定当前 Activity，使对话框等独立窗口在切语言时同步更新资源
-        localizationManager.bindActivity(this)
 
         setContent {
             ProvideLocalizedContext(localizationManager) {
