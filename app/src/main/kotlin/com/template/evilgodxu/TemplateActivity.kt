@@ -1,5 +1,6 @@
 package com.template.evilgodxu
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
@@ -11,7 +12,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.template.evilgodxu.data.repository.SettingsRepository
@@ -24,8 +29,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 
+// Activity 只做入口：挂载导航图与全局副作用，不持有状态字段、不参与业务
 class TemplateActivity : ComponentActivity() {
-    private lateinit var windowInsetsController: WindowInsetsControllerCompat
     private val localizationManager: LocalizationManager by inject()
     private val settingsRepository: SettingsRepository by inject()
 
@@ -41,18 +46,14 @@ class TemplateActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setupSystemBars()
 
         setContent {
+            // 全局副作用：按窗口方向显隐系统栏
+            SystemBarsVisibilityEffect()
             ProvideLocalizedContext(localizationManager) {
                 TemplateContent()
             }
         }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        updateSystemBarsVisibility()
     }
 
     @Composable
@@ -66,19 +67,22 @@ class TemplateActivity : ComponentActivity() {
             }
         }
     }
+}
 
-    private fun setupSystemBars() {
-        windowInsetsController = WindowInsetsControllerCompat(window, window.decorView)
-        windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        updateSystemBarsVisibility()
-    }
-
-    // 横屏隐藏系统栏，竖屏显示
-    private fun updateSystemBarsVisibility() {
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+// 按窗口方向显隐系统栏的全局副作用；横屏隐藏、竖屏显示
+@Composable
+private fun SystemBarsVisibilityEffect() {
+    val view = LocalView.current
+    if (view.isInEditMode) return
+    val orientation = LocalConfiguration.current.orientation
+    SideEffect {
+        val window = (view.context as? Activity)?.window ?: return@SideEffect
+        val controller = WindowCompat.getInsetsController(window, view)
+        controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            controller.hide(WindowInsetsCompat.Type.systemBars())
         } else {
-            windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+            controller.show(WindowInsetsCompat.Type.systemBars())
         }
     }
 }
