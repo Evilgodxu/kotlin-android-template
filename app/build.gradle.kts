@@ -107,10 +107,22 @@ android {
     buildFeatures {
         compose = true
     }
+    lint {
+        // 规范 3.5：质量门禁，Lint Error 阻断构建，release 变体同规则
+        abortOnError = true
+        checkReleaseBuilds = true
+    }
 }
 
 // 构建产物统一命名为 Template-<versionName>-arm64.apk
 val apkVersionName = android.defaultConfig.versionName ?: "0.0.0"
+
+kotlin {
+    compilerOptions {
+        // 规范 3.5：Kotlin 编译警告提级为 Error，弃用 API 告警源头清零
+        allWarningsAsErrors.set(true)
+    }
+}
 
 androidComponents {
     onVariants(selector().all()) { variant ->

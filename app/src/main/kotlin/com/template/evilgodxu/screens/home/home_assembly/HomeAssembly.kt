@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -21,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
 import com.template.evilgodxu.screens.home.home_assembly.about_area.AboutArea
 import com.template.evilgodxu.screens.home.home_assembly.welcome_area.WelcomeArea
+import com.template.evilgodxu.ui.topbar.AppTopBar
 
 // 首页分区组装器：编排欢迎与简介分区
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeAssembly(
     modifier: Modifier = Modifier,
@@ -32,8 +30,8 @@ fun HomeAssembly(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.home_title)) },
+            AppTopBar(
+                title = stringResource(R.string.home_title),
                 actions = {
                     IconButton(onClick = onOpenSettings) {
                         Icon(

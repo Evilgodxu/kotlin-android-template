@@ -7,12 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,9 +29,9 @@ import com.template.evilgodxu.screens.settings.dialog.ThemeSelectionDialog
 import com.template.evilgodxu.screens.settings.settings_assembly.app_info_area.AppInfoArea
 import com.template.evilgodxu.screens.settings.settings_assembly.appearance_area.AppearanceArea
 import com.template.evilgodxu.screens.settings.settings_assembly.language_area.LanguageArea
+import com.template.evilgodxu.ui.topbar.AppTopBar
 
 // 设置页分区组装器：编排外观、语言与关于分区
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsAssembly(
     uiState: SettingsUiState,
@@ -51,8 +48,8 @@ fun SettingsAssembly(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.settings_title)) },
+            AppTopBar(
+                title = stringResource(R.string.settings_title),
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(painterResource(R.drawable.ic_chevron_left), stringResource(R.string.back))
