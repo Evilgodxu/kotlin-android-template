@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
@@ -22,6 +21,7 @@ import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.ThemeMode
 import com.template.evilgodxu.screens.settings.SettingsUiState
 import com.template.evilgodxu.screens.settings.component.content.SettingsContent
+import com.template.evilgodxu.ui.icons.AppIcons
 import com.template.evilgodxu.ui.topbar.AppTopBar
 
 // 设置页宽屏组装器：内容限宽居中，避免宽屏下过度拉伸
@@ -41,7 +41,7 @@ fun SettingsExpandedAssembly(
                 title = stringResource(R.string.settings_title),
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(painterResource(R.drawable.ic_chevron_left), stringResource(R.string.back))
+                        Icon(AppIcons.ChevronLeft, stringResource(R.string.back))
                     }
                 },
             )

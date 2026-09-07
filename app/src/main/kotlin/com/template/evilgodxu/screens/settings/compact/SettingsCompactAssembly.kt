@@ -10,13 +10,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.ThemeMode
 import com.template.evilgodxu.screens.settings.SettingsUiState
 import com.template.evilgodxu.screens.settings.component.content.SettingsContent
+import com.template.evilgodxu.ui.icons.AppIcons
 import com.template.evilgodxu.ui.topbar.AppTopBar
 
 // 设置页窄屏组装器：全宽单列布局
@@ -36,7 +36,7 @@ fun SettingsCompactAssembly(
                 title = stringResource(R.string.settings_title),
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(painterResource(R.drawable.ic_chevron_left), stringResource(R.string.back))
+                        Icon(AppIcons.ChevronLeft, stringResource(R.string.back))
                     }
                 },
             )
