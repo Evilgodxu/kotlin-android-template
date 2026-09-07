@@ -79,6 +79,16 @@ object CrashLogManager : Thread.UncaughtExceptionHandler {
         }
     }
 
+    /**
+     * 返回今日日志文件。
+     * @return 今日日志文件；日志系统未初始化或今日无异常日志时返回 null。
+     */
+    fun getTodayLogFile(): File? {
+        val dir = logDir ?: return null
+        val logFile = File(dir, "$LOG_FILE_PREFIX${LocalDate.now().format(dateFormat)}.log")
+        return logFile.takeIf { it.isFile && it.length() > 0L }
+    }
+
     override fun uncaughtException(thread: Thread, throwable: Throwable) {
         // 崩溃日志必须同步落盘，确保进程终止前写入完成
         writeLog(title = "未捕获异常（线程 ${thread.name}）", thread = thread, throwable = throwable, withDeviceInfo = true)

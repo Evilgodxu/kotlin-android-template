@@ -1,6 +1,8 @@
 package com.template.evilgodxu.screens.settings.component.appInfo
 
+import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,8 +23,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import com.template.evilgodxu.R
+import com.template.evilgodxu.log.CrashLogManager
 
 // 关于分区：应用信息
 @Composable
@@ -31,7 +35,7 @@ fun AppInfoArea(version: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 20.dp),
+            .padding(top = 20.dp, bottom = 8.dp),
     ) {
         Text(
             text = "Evilgodxu",
@@ -48,10 +52,20 @@ fun AppInfoArea(version: String) {
             fontSize = 13.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
         )
+        Text(
+            text = stringResource(R.string.settings_log),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+                .clickable { shareTodayLog(context) },
+            textAlign = TextAlign.Center,
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.primary,
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp, bottom = 8.dp),
+                .padding(top = 8.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -79,6 +93,22 @@ fun AppInfoArea(version: String) {
             }
         }
     }
+}
+
+/** 唤起系统分享今日异常日志；今日无日志时提示用户 */
+private fun shareTodayLog(context: Context) {
+    val logFile = CrashLogManager.getTodayLogFile()
+    if (logFile == null) {
+        Toast.makeText(context, context.getString(R.string.settings_log_empty_today), Toast.LENGTH_SHORT).show()
+        return
+    }
+    val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", logFile)
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_STREAM, uri)
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.settings_share_log_title)))
 }
 
 private const val GITHUB_URL = "https://github.com/Evilgodxu/android-template"

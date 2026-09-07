@@ -32,4 +32,7 @@
     <string name="back">Back</string>
     <string name="exit_hint">Press back again to exit</string>
     <string name="settings_version">Version %1$s</string>
+    <string name="settings_log">Log</string>
+    <string name="settings_log_empty_today">No log available today</string>
+    <string name="settings_share_log_title">Share log</string>
 </resources>
