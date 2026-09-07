@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,11 +28,14 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import com.template.evilgodxu.R
 import com.template.evilgodxu.log.CrashLogManager
+import com.template.evilgodxu.update.AppUpdateChecker
+import kotlinx.coroutines.launch
 
 // 关于分区：应用信息
 @Composable
 fun AppInfoArea(version: String) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,20 +51,23 @@ fun AppInfoArea(version: String) {
         )
         Text(
             text = stringResource(R.string.settings_version, version),
-            modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 2.dp)
+                .clickable { scope.launch { checkUpdate(context, version) } },
             textAlign = TextAlign.Center,
             fontSize = 13.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
         )
         Text(
-            text = stringResource(R.string.settings_log),
+            text = "[${stringResource(R.string.settings_log)}]",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp)
                 .clickable { shareTodayLog(context) },
             textAlign = TextAlign.Center,
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
         )
         Row(
             modifier = Modifier
@@ -72,7 +79,8 @@ fun AppInfoArea(version: String) {
             Row(
                 modifier = Modifier
                     .clickable {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, GITHUB_URL.toUri()))
+                        val urlIntent = Intent(Intent.ACTION_VIEW, GITHUB_URL.toUri())
+                        context.startActivity(urlIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                     }
                     .padding(horizontal = 12.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -108,7 +116,21 @@ private fun shareTodayLog(context: Context) {
         putExtra(Intent.EXTRA_STREAM, uri)
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
-    context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.settings_share_log_title)))
+    // 本地化上下文非 Activity，启动外部 Activity 需 NEW_TASK 标志
+    val chooser = Intent.createChooser(shareIntent, context.getString(R.string.settings_share_log_title))
+    context.startActivity(chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+}
+
+/** 查询线上最新版本并与当前版本比较，以 Toast 反馈检查结果 */
+private suspend fun checkUpdate(context: Context, currentVersion: String) {
+    val latest = AppUpdateChecker.fetchLatestVersion()
+    val message = when {
+        latest == null -> context.getString(R.string.settings_update_failed)
+        !AppUpdateChecker.hasNewVersion(latest, currentVersion) ->
+            context.getString(R.string.settings_update_latest)
+        else -> context.getString(R.string.settings_update_available, latest)
+    }
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 private const val GITHUB_URL = "https://github.com/Evilgodxu/android-template"

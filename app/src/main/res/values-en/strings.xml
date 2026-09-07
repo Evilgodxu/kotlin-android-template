@@ -35,4 +35,7 @@
     <string name="settings_log">Log</string>
     <string name="settings_log_empty_today">No log available today</string>
     <string name="settings_share_log_title">Share log</string>
+    <string name="settings_update_latest">You\'re up to date</string>
+    <string name="settings_update_available">New version available: %1$s</string>
+    <string name="settings_update_failed">Failed to check for updates. Try again later</string>
 </resources>
