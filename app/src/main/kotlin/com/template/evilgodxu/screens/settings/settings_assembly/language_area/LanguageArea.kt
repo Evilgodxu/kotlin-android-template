@@ -5,12 +5,12 @@ import androidx.compose.ui.res.stringResource
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.screens.settings.settings_assembly.component.clickableItem.SettingsClickableItem
-import com.template.evilgodxu.screens.settings.settings_assembly.component.section.SettingsSection
+import com.template.evilgodxu.ui.section.SectionCard
 
 // 语言分区
 @Composable
 fun LanguageArea(language: AppLanguage, onLanguageSelected: (AppLanguage) -> Unit, onShowDialog: () -> Unit) {
-    SettingsSection(title = stringResource(R.string.settings_section_language)) {
+    SectionCard(title = stringResource(R.string.settings_section_language)) {
         SettingsClickableItem(
             icon = R.drawable.ic_language,
             title = stringResource(R.string.settings_language_title),

@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.settings_assembly.component.section
+package com.template.evilgodxu.ui.section
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -13,9 +13,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// 设置页分区卡片容器
+// 全局共享分区卡片容器：被多个页面复用时上浮至 ui 共享层（规范 13）
 @Composable
-fun SettingsSection(title: String, content: @Composable () -> Unit) {
+fun SectionCard(title: String, content: @Composable () -> Unit) {
     Column {
         Text(
             title,

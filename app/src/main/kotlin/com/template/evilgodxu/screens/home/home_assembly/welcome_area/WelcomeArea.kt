@@ -11,12 +11,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.template.evilgodxu.R
-import com.template.evilgodxu.screens.settings.settings_assembly.component.section.SettingsSection
+import com.template.evilgodxu.ui.section.SectionCard
 
-// 欢迎分区：欢迎卡片，复用设置页分区容器的视觉规范
+// 欢迎分区：欢迎卡片，复用全局分区容器视觉规范
 @Composable
 fun WelcomeArea(modifier: Modifier = Modifier) {
-    SettingsSection(title = stringResource(R.string.home_welcome_title)) {
+    SectionCard(title = stringResource(R.string.home_welcome_title)) {
         Column(
             modifier = modifier
                 .fillMaxWidth()

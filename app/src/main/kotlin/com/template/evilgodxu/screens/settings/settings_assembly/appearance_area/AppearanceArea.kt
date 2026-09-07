@@ -6,12 +6,12 @@ import androidx.compose.ui.res.stringResource
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.ThemeMode
 import com.template.evilgodxu.screens.settings.settings_assembly.component.clickableItem.SettingsClickableItem
-import com.template.evilgodxu.screens.settings.settings_assembly.component.section.SettingsSection
+import com.template.evilgodxu.ui.section.SectionCard
 
 // 外观分区
 @Composable
 fun AppearanceArea(themeMode: ThemeMode, onThemeClick: (Offset) -> Unit) {
-    SettingsSection(title = stringResource(R.string.settings_section_appearance)) {
+    SectionCard(title = stringResource(R.string.settings_section_appearance)) {
         SettingsClickableItem(
             icon = R.drawable.ic_palette,
             title = stringResource(R.string.settings_theme_title),
