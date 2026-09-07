@@ -10,6 +10,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
@@ -29,6 +30,7 @@ fun AppNavHost(
     val activity = LocalActivity.current
     val context = LocalContext.current
     var lastRootBackAt by rememberSaveable { mutableLongStateOf(0L) }
+    val exitHint = stringResource(R.string.exit_hint)
     val goBack: () -> Unit = {
         if (backStack.size > 1) {
             backStack.removeLastOrNull()
@@ -38,7 +40,7 @@ fun AppNavHost(
                 activity?.finish()
             } else {
                 lastRootBackAt = now
-                Toast.makeText(context, context.getString(R.string.exit_hint), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, exitHint, Toast.LENGTH_SHORT).show()
             }
         }
     }

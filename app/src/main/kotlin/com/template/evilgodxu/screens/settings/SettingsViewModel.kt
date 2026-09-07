@@ -1,6 +1,8 @@
 package com.template.evilgodxu.screens.settings
 
 import android.app.Application
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.template.evilgodxu.data.repository.SettingsRepository
@@ -54,6 +56,13 @@ class SettingsViewModel(
     }
 
     private fun getVersion(): String {
-        return context.packageManager.getPackageInfo(context.packageName, 0).versionName.orEmpty()
+        // PackageInfoFlags 重载自 API 33 引入，低版本回退旧重载：
+        // https://developer.android.com/reference/android/content/pm/PackageManager#getPackageInfo(java.lang.String,%20android.content.pm.PackageManager.PackageInfoFlags)
+        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(0L))
+        } else {
+            context.packageManager.getPackageInfo(context.packageName, 0)
+        }
+        return packageInfo.versionName.orEmpty()
     }
 }

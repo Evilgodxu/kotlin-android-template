@@ -1,6 +1,7 @@
 package com.template.evilgodxu.log
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import java.io.File
@@ -48,7 +49,13 @@ object CrashLogManager : Thread.UncaughtExceptionHandler {
     fun init(context: Context) {
         logDir = File(context.getExternalFilesDir(null), LOG_DIR_NAME).apply { mkdirs() }
         appVersion = runCatching {
-            val info = context.packageManager.getPackageInfo(context.packageName, 0)
+            // PackageInfoFlags 重载自 API 33 引入，低版本回退旧重载：
+            // https://developer.android.com/reference/android/content/pm/PackageManager#getPackageInfo(java.lang.String,%20android.content.pm.PackageManager.PackageInfoFlags)
+            val info = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(0L))
+            } else {
+                context.packageManager.getPackageInfo(context.packageName, 0)
+            }
             "${info.versionName} (${info.longVersionCode})"
         }.getOrDefault("unknown")
 
