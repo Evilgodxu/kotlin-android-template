@@ -27,10 +27,11 @@ import org.koin.android.ext.android.inject
 class TemplateActivity : ComponentActivity() {
     private lateinit var windowInsetsController: WindowInsetsControllerCompat
     private val localizationManager: LocalizationManager by inject()
+    private val settingsRepository: SettingsRepository by inject()
 
     // 冷启动按持久化语言创建配置上下文，进入界面即正确语言
     override fun attachBaseContext(newBase: Context) {
-        val locale = runBlocking { SettingsRepository(newBase).appLanguage.first() }.toLocale()
+        val locale = runBlocking { settingsRepository.appLanguage.first() }.toLocale()
         val config = Configuration(newBase.resources.configuration).apply {
             setLocales(LocaleList(locale))
         }
