@@ -1,8 +1,11 @@
 package com.template.evilgodxu.utils.localization
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.os.LocaleList
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -52,7 +55,21 @@ fun ProvideLocalizedContext(
         initialValue = LocalLocale.current.platformLocale,
     )
     val localizedContext = localizationManager.createLocalizedContext(locale)
-    CompositionLocalProvider(LocalContext provides localizedContext) {
+    // LocalActivity 的默认值派生自 LocalContext.current（沿 ContextWrapper 链解包）；
+    // 替换为本地化 Context 后会解包不到 Activity（底层是 Application），导致依赖 Activity 的
+    // 能力失效（如首页双击退出的 finish()），因此显式提供进入时的宿主 Activity
+    val activity = checkNotNull(LocalContext.current.findActivity())
+    CompositionLocalProvider(
+        LocalContext provides localizedContext,
+        LocalActivity provides activity,
+    ) {
         content()
     }
+}
+
+// 沿 ContextWrapper 链向上查找宿主 Activity
+private tailrec fun Context.findActivity(): Activity? = when {
+    this is Activity -> this
+    this is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
