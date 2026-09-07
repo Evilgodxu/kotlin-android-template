@@ -17,7 +17,7 @@ import kotlin.system.exitProcess
 
 /**
  * 捕获并记录未捕获异常与 catch 到的异常，链式调用系统默认处理器。
- * 日志按天写入应用专属外部目录，自动清理超期文件。
+ * 日志按天写入应用专属外部目录，仅保留今日日志，启动时清理历史文件。
  */
 object CrashLogManager : Thread.UncaughtExceptionHandler {
 
@@ -27,16 +27,13 @@ object CrashLogManager : Thread.UncaughtExceptionHandler {
     private const val LOG_DIR_NAME = "logs"
 
     /** 日志文件名前缀 */
-    private const val LOG_FILE_PREFIX = "crash_"
-
-    /** 日志保留天数 */
-    private const val KEEP_DAYS = 3L
+    private const val LOG_FILE_PREFIX = "Template_"
 
     private val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     private val timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
 
     private var logDir: File? = null
-    private var appVersion = "unknown"
+    private var appContext: Context? = null
     private var previousHandler: Thread.UncaughtExceptionHandler? = null
     private var lastCleanDate: LocalDate? = null
 
@@ -48,16 +45,7 @@ object CrashLogManager : Thread.UncaughtExceptionHandler {
     /** 初始化日志系统，应在 Application.onCreate 最前面调用 */
     fun init(context: Context) {
         logDir = File(context.getExternalFilesDir(null), LOG_DIR_NAME).apply { mkdirs() }
-        appVersion = runCatching {
-            // PackageInfoFlags 重载自 API 33 引入，低版本回退旧重载：
-            // https://developer.android.com/reference/android/content/pm/PackageManager#getPackageInfo(java.lang.String,%20android.content.pm.PackageManager.PackageInfoFlags)
-            val info = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(0L))
-            } else {
-                context.packageManager.getPackageInfo(context.packageName, 0)
-            }
-            "${info.versionName} (${info.longVersionCode})"
-        }.getOrDefault("unknown")
+        appContext = context.applicationContext
 
         // 链式接管默认处理器，保留系统默认崩溃流程
         previousHandler = Thread.getDefaultUncaughtExceptionHandler()
@@ -115,7 +103,7 @@ object CrashLogManager : Thread.UncaughtExceptionHandler {
                     writer.appendLine("进程: ${android.os.Process.myPid()}")
                     writer.appendLine("设备: ${Build.MANUFACTURER} ${Build.MODEL}")
                     writer.appendLine("系统: Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
-                    writer.appendLine("版本: $appVersion")
+                    writer.appendLine("版本: ${currentAppVersion()}")
                 }
                 if (throwable != null) {
                     writer.appendLine("异常: ${throwable.javaClass.name}: ${throwable.message}")
@@ -133,12 +121,21 @@ object CrashLogManager : Thread.UncaughtExceptionHandler {
         }
     }
 
-    /** 清理超过保留天数的旧日志文件 */
+    /** 仅保留今日日志，清理全部历史日志文件 */
     private fun cleanOldLogs() {
         val dir = logDir ?: return
-        val deadline = System.currentTimeMillis() - KEEP_DAYS * 24 * 60 * 60 * 1000L
+        val todayFile = "$LOG_FILE_PREFIX${LocalDate.now().format(dateFormat)}.log"
         dir.listFiles { f -> f.isFile && f.name.startsWith(LOG_FILE_PREFIX) }
-            ?.filter { it.lastModified() < deadline }
+            ?.filter { it.name != todayFile }
             ?.forEach { it.delete() }
+    }
+
+    // 动态读取当前安装版本：应用升级后写入的日志头立即反映新版本，避免遗留旧版本号
+    private fun currentAppVersion(): String {
+        val context = appContext ?: return "unknown"
+        return runCatching {
+            val info = context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(0L))
+            "${info.versionName} (${info.longVersionCode})"
+        }.getOrDefault("unknown")
     }
 }

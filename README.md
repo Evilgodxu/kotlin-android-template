@@ -12,7 +12,7 @@
 ![AGP](https://img.shields.io/badge/AGP-9.4.0-blue)
 ![Gradle](https://img.shields.io/badge/Gradle-9.7.0-blue)
 ![Compose BOM](https://img.shields.io/badge/Compose%20BOM-2026.08.00-blue)
-![minSdk](https://img.shields.io/badge/minSdk-32-orange)
+![minSdk](https://img.shields.io/badge/minSdk-33-orange)
 ![targetSdk](https://img.shields.io/badge/targetSdk-37-orange)
 
 </div>

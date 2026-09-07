@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         applicationId = "com.template.evilgodxu"
-        minSdk = 32
+        minSdk = 33
         targetSdk = 37
         versionCode = 1
         versionName = "1.0.0"
