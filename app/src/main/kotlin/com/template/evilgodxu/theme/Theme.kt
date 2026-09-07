@@ -17,7 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.clipPath
@@ -129,7 +129,7 @@ fun MyApplicationTheme(
     content: @Composable () -> Unit,
 ) {
     val settingsRepository = koinInject<SettingsRepository>()
-    val settings by settingsRepository.settings.collectAsState(initial = null)
+    val settings by settingsRepository.settings.collectAsStateWithLifecycle(initialValue = null)
 
     val isDarkTheme = when (settings?.themeMode) {
         ThemeMode.DARK -> true

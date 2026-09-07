@@ -5,10 +5,10 @@ import android.content.res.Configuration
 import android.os.LocaleList
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLocale
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.template.evilgodxu.data.repository.SettingsRepository
 import com.template.evilgodxu.data.settings.AppLanguage
 import java.util.Locale
@@ -48,8 +48,8 @@ fun ProvideLocalizedContext(
     localizationManager: LocalizationManager,
     content: @Composable () -> Unit,
 ) {
-    val locale by localizationManager.localeFlow.collectAsState(
-        initial = LocalLocale.current.platformLocale,
+    val locale by localizationManager.localeFlow.collectAsStateWithLifecycle(
+        initialValue = LocalLocale.current.platformLocale,
     )
     val localizedContext = localizationManager.createLocalizedContext(locale)
     CompositionLocalProvider(LocalContext provides localizedContext) {
