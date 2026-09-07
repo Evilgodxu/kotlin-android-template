@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.home.component.welcome
+package com.template.evilgodxu.screens.home.component.about
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,23 +13,17 @@ import androidx.compose.ui.unit.sp
 import com.template.evilgodxu.R
 import com.template.evilgodxu.ui.section.SectionCard
 
-// 欢迎分区：欢迎卡片，复用全局分区容器视觉规范
+// 项目简介卡片：复用全局 SectionCard 容器
 @Composable
-fun WelcomeArea(modifier: Modifier = Modifier) {
-    SectionCard(title = stringResource(R.string.home_welcome_title)) {
+fun About(modifier: Modifier = Modifier) {
+    SectionCard(title = stringResource(R.string.home_about_title)) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 12.dp),
         ) {
             Text(
-                text = stringResource(R.string.home_greeting),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 4.dp),
-            )
-            Text(
-                text = stringResource(R.string.home_welcome_message),
+                text = stringResource(R.string.home_about_message),
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
             )

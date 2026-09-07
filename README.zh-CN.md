@@ -2,14 +2,14 @@
 
 # Template
 
-**一个开箱即用的现代化 Android 应用模板，基于 Jetpack Compose、MVVM 与分区架构构建。**
+**一个开箱即用的现代化 Android 应用模板，基于 Jetpack Compose、MVVM 与模块化架构构建。**
 
 [English](README.md) | **简体中文**
 
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Platform](https://img.shields.io/badge/platform-Android-brightgreen)
-![Kotlin](https://img.shields.io/badge/Kotlin-2.4.10-purple)
-![AGP](https://img.shields.io/badge/AGP-9.3.1-blue)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.4.20-purple)
+![AGP](https://img.shields.io/badge/AGP-9.4.0-blue)
 ![Gradle](https://img.shields.io/badge/Gradle-9.7.0-blue)
 ![Compose BOM](https://img.shields.io/badge/Compose%20BOM-2026.08.00-blue)
 ![minSdk](https://img.shields.io/badge/minSdk-32-orange)
@@ -23,13 +23,14 @@
 
 - **单 Activity 架构**：基于 Jetpack Compose + Material 3，支持边到边（edge-to-edge）渲染
 - **MVVM + 单向数据流**：每个页面由 `UiState` + `ViewModel` 驱动，状态自上而下、事件自下而上
-- **分区架构组织代码**：页面按语义拆分为组装器与分区（`{Name}Assembly` / `{Name}Area`），结构清晰、便于定位与复用
+- **自适应组装器 + 语义组件**：页面按窗口尺寸类拆分为 `CompactAssembly` / `ExpandedAssembly`；页面组件位于 `component/`，直接语义命名、不加泛化后缀
 - **Navigation3 导航**：类型安全路由 + 显式返回栈
 - **Koin 依赖注入**：在 `Application.onCreate` 中启动
 - **DataStore Preferences 持久化**：统一管理应用设置
 - **主题模式**：跟随系统 / 浅色 / 深色，切换时带圆形扩散过渡动效
 - **应用内多语言**：简体中文 / English / 跟随系统，运行时热切换、无需重建 Activity（已禁用按语言分包，保证切换始终生效）
-- **崩溃日志管理**：未捕获异常与捕获异常写入应用专属外部目录，超期自动清理，并链式调用系统默认处理器
+- **崩溃日志管理**：未捕获异常与捕获异常写入应用专属外部目录，超期自动清理，并链式调用系统默认处理器；设置页可一键分享今日日志
+- **版本更新检查**：设置页查询 GitHub 最新 Release，发现新版本时提示
 - **构建优化**：Release 启用 R8 + 资源压缩、签名构建，仅打 `arm64-v8a` ABI，APK 输出命名固定
 
 ## 页面
@@ -37,20 +38,20 @@
 | 页面 | 内容 |
 | --- | --- |
 | 首页 | 欢迎与项目简介卡片，设置入口 |
-| 设置 | 外观（主题）、语言、关于（版本 + GitHub 链接） |
+| 设置 | 外观（主题）、语言、关于（版本、分享今日崩溃日志、检查更新、GitHub 链接） |
 
 ## 技术栈
 
 | 层次 | 技术 |
 | --- | --- |
-| 语言 | Kotlin 2.4.10 |
+| 语言 | Kotlin 2.4.20 |
 | UI | Jetpack Compose（BOM 2026.08.00）+ Material 3 |
-| 导航 | AndroidX Navigation3 1.1.6 |
+| 导航 | AndroidX Navigation3 1.1.7 |
 | 依赖注入 | Koin 4.2.2 |
 | 持久化 | DataStore Preferences 1.2.1 |
 | 序列化 | kotlinx.serialization 1.11.0 |
 | 生命周期 | androidx.lifecycle 2.11.0、activity-compose 1.13.0 |
-| 构建 | AGP 9.3.1、Gradle 9.7.0、refreshVersions 0.60.6 |
+| 构建 | AGP 9.4.0、Gradle 9.7.0、refreshVersions 0.60.6 |
 
 ## 项目结构
 
@@ -67,11 +68,17 @@
 │       │   ├── navigation/              # Navigation3 类型安全路由
 │       │   ├── screens/                 # 页面模块
 │       │   │   ├── home/                #   首页
-│       │   │   │   └── home_assembly/   #     HomeAssembly + 分区
+│       │   │   │   ├── compact/         #   窄屏组装器
+│       │   │   │   ├── expanded/        #   宽屏组装器
+│       │   │   │   └── component/       #   欢迎 / 项目简介卡片
 │       │   │   └── settings/            #   设置页
-│       │   │       ├── settings_assembly/
-│       │   │       └── dialog/          #     选择弹窗
+│       │   │       ├── compact/         #   窄屏组装器
+│       │   │       ├── expanded/        #   宽屏组装器
+│       │   │       ├── component/       #   外观 / 语言 / 关于
+│       │   │       └── dialog/          #   选择弹窗
 │       │   ├── theme/                   # Material 3 配色与字体
+│       │   ├── ui/                      # 共享 UI（顶栏 / 区块卡片 / 窗口尺寸）
+│       │   ├── update/                  # 最新版本检查（GitHub API）
 │       │   ├── utils/localization/      # 应用内多语言管理
 │       │   ├── TemplateActivity.kt
 │       │   └── TemplateApplication.kt
@@ -89,11 +96,11 @@
 
 应用采用 **MVVM + 单向数据流**：状态由 `ViewModel` → `UiState` → UI 自上而下流动，事件由 UI 自下而上传递；共享数据逻辑位于 `data/` 层并通过 Repository 暴露，全部由 Koin 组装。
 
-代码遵循 **分区架构（assembly/area 模式）**：
+代码遵循 **按窗口尺寸类拆分的模块化模式**：
 
-- `{ScreenName}Screen.kt` — 页面入口，负责将 ViewModel 与 UI 关联
-- `{ScreenName}Assembly.kt` — 页面分区组装器，编排各分区
-- `{Name}Area.kt` — 语义单一、自包含的 UI 分区
+- `{ScreenName}Screen.kt` — 页面入口，负责将 ViewModel 与 UI 关联，并按尺寸类分发
+- `{ScreenName}CompactAssembly.kt` / `{ScreenName}ExpandedAssembly.kt` — 窄屏 / 宽屏自适应组装器
+- `component/` 下的 `{Name}.kt` — 语义单一、自包含的 UI 组件，直接语义命名、不加泛化后缀
 
 通用能力（`data/`、`theme/`、`utils/`）被两个及以上页面复用时上提至顶层；仅单页使用的代码保留在页面模块内。
 
@@ -138,7 +145,7 @@ KEY_PASSWORD=你的别名密码
 - **应用显示名**：修改 `app/src/main/res/values/strings.xml` 中的 `app_name`
 - **主题配色**：修改 `app/src/main/kotlin/.../theme/Color.kt`
 - **支持的 ABI**：调整 `app/build.gradle.kts` 中的 `ndk.abiFilters`（当前仅 `arm64-v8a`）
-- **新增页面**：在 `screens/<name>/` 下创建页面模块（`UiState` + `ViewModel` + `Assembly`/`Area`），在 `navigation/Screen.kt` 注册路由，并加入 `AppNavHost`
+- **新增页面**：在 `screens/<name>/` 下创建页面模块（`UiState` + `ViewModel` + `Compact`/`Expanded` 组装器，组件放 `component/`），在 `navigation/Screen.kt` 注册路由，并加入 `AppNavHost`
 
 ## License
 

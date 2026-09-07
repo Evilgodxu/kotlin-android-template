@@ -16,8 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
-import com.template.evilgodxu.screens.home.component.about.AboutArea
-import com.template.evilgodxu.screens.home.component.welcome.WelcomeArea
+import com.template.evilgodxu.screens.home.component.about.About
+import com.template.evilgodxu.screens.home.component.welcome.Welcome
 import com.template.evilgodxu.ui.topbar.AppTopBar
 
 // 首页窄屏组装器：全宽单列布局
@@ -51,8 +51,8 @@ fun HomeCompactAssembly(
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
-            WelcomeArea()
-            AboutArea()
+            Welcome()
+            About()
         }
     }
 }

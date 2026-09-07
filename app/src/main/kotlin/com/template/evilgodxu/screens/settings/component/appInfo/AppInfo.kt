@@ -31,9 +31,9 @@ import com.template.evilgodxu.log.CrashLogManager
 import com.template.evilgodxu.update.AppUpdateChecker
 import kotlinx.coroutines.launch
 
-// 关于分区：应用信息
+// 关于：应用信息与版本
 @Composable
-fun AppInfoArea(version: String) {
+fun AppInfo(version: String) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     Column(
@@ -42,7 +42,7 @@ fun AppInfoArea(version: String) {
             .padding(top = 20.dp, bottom = 8.dp),
     ) {
         Text(
-            text = "Evilgodxu",
+            text = stringResource(R.string.settings_about_brand),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
@@ -60,7 +60,7 @@ fun AppInfoArea(version: String) {
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
         )
         Text(
-            text = "[${stringResource(R.string.settings_log)}]",
+            text = stringResource(R.string.settings_log),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp)

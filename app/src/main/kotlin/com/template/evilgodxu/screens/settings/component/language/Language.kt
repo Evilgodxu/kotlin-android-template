@@ -7,9 +7,9 @@ import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.screens.settings.component.clickableItem.SettingsClickableItem
 import com.template.evilgodxu.ui.section.SectionCard
 
-// 语言分区
+// 语言设置项
 @Composable
-fun LanguageArea(language: AppLanguage, onLanguageSelected: (AppLanguage) -> Unit, onShowDialog: () -> Unit) {
+fun Language(language: AppLanguage, onLanguageSelected: (AppLanguage) -> Unit, onShowDialog: () -> Unit) {
     SectionCard(title = stringResource(R.string.settings_section_language)) {
         SettingsClickableItem(
             icon = R.drawable.ic_language,

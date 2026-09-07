@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.ThemeMode
 import com.template.evilgodxu.screens.settings.SettingsUiState
-import com.template.evilgodxu.screens.settings.component.appInfo.AppInfoArea
-import com.template.evilgodxu.screens.settings.component.appearance.AppearanceArea
-import com.template.evilgodxu.screens.settings.component.language.LanguageArea
+import com.template.evilgodxu.screens.settings.component.appInfo.AppInfo
+import com.template.evilgodxu.screens.settings.component.appearance.Appearance
+import com.template.evilgodxu.screens.settings.component.language.Language
 import com.template.evilgodxu.screens.settings.dialog.LanguageSelectionDialog
 import com.template.evilgodxu.screens.settings.dialog.ThemeSelectionDialog
 
-// 设置页内容单元：分区列表 + 弹窗状态，供各尺寸组装器复用
+// 设置页内容单元：设置列表 + 弹窗状态，供各尺寸组装器复用
 @Composable
 fun SettingsContent(
     uiState: SettingsUiState,
@@ -39,15 +39,15 @@ fun SettingsContent(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp),
     ) {
-        AppearanceArea(
+        Appearance(
             themeMode = uiState.themeMode,
             onThemeClick = { position ->
                 pendingThemeClickPosition = position
                 showThemeDialog = true
             },
         )
-        LanguageArea(uiState.language, onLanguageSelected, onShowDialog = { showLanguageDialog = true })
-        AppInfoArea(uiState.version)
+        Language(uiState.language, onLanguageSelected, onShowDialog = { showLanguageDialog = true })
+        AppInfo(uiState.version)
     }
 
     if (showThemeDialog) {

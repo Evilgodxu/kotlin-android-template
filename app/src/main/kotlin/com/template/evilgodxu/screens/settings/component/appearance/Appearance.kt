@@ -8,9 +8,9 @@ import com.template.evilgodxu.data.settings.ThemeMode
 import com.template.evilgodxu.screens.settings.component.clickableItem.SettingsClickableItem
 import com.template.evilgodxu.ui.section.SectionCard
 
-// 外观分区
+// 外观设置项
 @Composable
-fun AppearanceArea(themeMode: ThemeMode, onThemeClick: (Offset) -> Unit) {
+fun Appearance(themeMode: ThemeMode, onThemeClick: (Offset) -> Unit) {
     SectionCard(title = stringResource(R.string.settings_section_appearance)) {
         SettingsClickableItem(
             icon = R.drawable.ic_palette,
