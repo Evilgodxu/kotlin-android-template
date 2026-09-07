@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.settings_assembly
+package com.template.evilgodxu.screens.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -23,12 +23,11 @@ import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.ThemeMode
-import com.template.evilgodxu.screens.settings.SettingsUiState
+import com.template.evilgodxu.screens.settings.component.appInfo.AppInfoArea
+import com.template.evilgodxu.screens.settings.component.appearance.AppearanceArea
+import com.template.evilgodxu.screens.settings.component.language.LanguageArea
 import com.template.evilgodxu.screens.settings.dialog.LanguageSelectionDialog
 import com.template.evilgodxu.screens.settings.dialog.ThemeSelectionDialog
-import com.template.evilgodxu.screens.settings.settings_assembly.app_info_area.AppInfoArea
-import com.template.evilgodxu.screens.settings.settings_assembly.appearance_area.AppearanceArea
-import com.template.evilgodxu.screens.settings.settings_assembly.language_area.LanguageArea
 import com.template.evilgodxu.ui.topbar.AppTopBar
 
 // 设置页分区组装器：编排外观、语言与关于分区

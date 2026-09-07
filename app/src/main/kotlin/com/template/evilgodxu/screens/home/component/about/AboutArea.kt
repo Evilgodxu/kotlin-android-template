@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.home.home_assembly.about_area
+package com.template.evilgodxu.screens.home.component.about
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

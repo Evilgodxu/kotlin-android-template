@@ -1,11 +1,11 @@
-package com.template.evilgodxu.screens.settings.settings_assembly.appearance_area
+package com.template.evilgodxu.screens.settings.component.appearance
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.stringResource
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.ThemeMode
-import com.template.evilgodxu.screens.settings.settings_assembly.component.clickableItem.SettingsClickableItem
+import com.template.evilgodxu.screens.settings.component.clickableItem.SettingsClickableItem
 import com.template.evilgodxu.ui.section.SectionCard
 
 // 外观分区

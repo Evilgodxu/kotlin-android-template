@@ -1,10 +1,10 @@
-package com.template.evilgodxu.screens.settings.settings_assembly.language_area
+package com.template.evilgodxu.screens.settings.component.language
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.AppLanguage
-import com.template.evilgodxu.screens.settings.settings_assembly.component.clickableItem.SettingsClickableItem
+import com.template.evilgodxu.screens.settings.component.clickableItem.SettingsClickableItem
 import com.template.evilgodxu.ui.section.SectionCard
 
 // 语言分区

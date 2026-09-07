@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.template.evilgodxu.screens.settings.settings_assembly.SettingsAssembly
 import com.template.evilgodxu.theme.LocalThemeTransitionController
 import org.koin.androidx.compose.koinViewModel
 

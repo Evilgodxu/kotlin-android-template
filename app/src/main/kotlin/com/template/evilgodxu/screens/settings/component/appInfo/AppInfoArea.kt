@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.settings_assembly.app_info_area
+package com.template.evilgodxu.screens.settings.component.appInfo
 
 import android.content.Intent
 import androidx.compose.foundation.clickable

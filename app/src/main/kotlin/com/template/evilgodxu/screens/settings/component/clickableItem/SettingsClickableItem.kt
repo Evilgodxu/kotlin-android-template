@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.settings_assembly.component.clickableItem
+package com.template.evilgodxu.screens.settings.component.clickableItem
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable

@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.home.home_assembly
+package com.template.evilgodxu.screens.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -10,15 +10,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.R
-import com.template.evilgodxu.screens.home.home_assembly.about_area.AboutArea
-import com.template.evilgodxu.screens.home.home_assembly.welcome_area.WelcomeArea
+import com.template.evilgodxu.screens.home.component.about.AboutArea
+import com.template.evilgodxu.screens.home.component.welcome.WelcomeArea
 import com.template.evilgodxu.ui.topbar.AppTopBar
 
 // 首页分区组装器：编排欢迎与简介分区
