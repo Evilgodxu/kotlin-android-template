@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.home
+package com.template.evilgodxu.screens.home.compact
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -20,11 +20,11 @@ import com.template.evilgodxu.screens.home.component.about.AboutArea
 import com.template.evilgodxu.screens.home.component.welcome.WelcomeArea
 import com.template.evilgodxu.ui.topbar.AppTopBar
 
-// 首页分区组装器：编排欢迎与简介分区
+// 首页窄屏组装器：全宽单列布局
 @Composable
-fun HomeAssembly(
+fun HomeCompactAssembly(
     modifier: Modifier = Modifier,
-    onOpenSettings: () -> Unit = {},
+    onOpenSettings: () -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
