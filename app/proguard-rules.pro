@@ -1,13 +1,8 @@
-# ============================================================
 # 基础规则：保留行号信息用于 Release 崩溃堆栈分析
-# ============================================================
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
 
-# ============================================================
-# Kotlin Serialization（官方推荐规则）
-# https://github.com/Kotlin/kotlinx.serialization/blob/master/rules/common.pro
-# ============================================================
+# Kotlin Serialization：保留序列化器与元数据供反射使用
 -keepattributes *Annotation*, InnerClasses, EnclosingMethod, Signature
 -keepclassmembers @kotlinx.serialization.Serializable class ** {
     static ** Companion;
@@ -31,19 +26,9 @@
     private ** descriptor;
 }
 
-# ============================================================
-# Koin 依赖注入（官方推荐规则）
-# https://github.com/InsertKoinIO/koin/blob/main/projects/android/koin-android/proguard-rules.pro
-# ============================================================
+# Koin：保留模块与注解元数据供运行时装配
 -keep class * extends org.koin.core.module.Module { *; }
 -keepclassmembers class * {
     @org.koin.core.annotation.* *;
 }
 
-# ============================================================
-# Navigation Compose 类型安全 API
-# ============================================================
--keep class * implements androidx.navigation.NavType { *; }
--keepclassmembers class * {
-    @androidx.navigation.NavType <fields>;
-}

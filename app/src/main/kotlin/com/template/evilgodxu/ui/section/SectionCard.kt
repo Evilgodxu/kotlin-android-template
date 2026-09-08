@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// 全局共享卡片容器：被多个页面复用时上浮至 ui 共享层（规范 13）
+// 全局共享卡片容器：带标题的分组卡片，供多页面复用
 @Composable
 fun SectionCard(title: String, content: @Composable () -> Unit) {
     Column {

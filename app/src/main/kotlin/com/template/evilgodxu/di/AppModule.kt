@@ -6,10 +6,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.template.evilgodxu.TemplateActivityViewModel
 import com.template.evilgodxu.data.repository.DataStoreSettingsRepository
 import com.template.evilgodxu.data.repository.SettingsRepository
 import com.template.evilgodxu.screens.home.HomeViewModel
-import com.template.evilgodxu.screens.settings.SettingsViewModel
 import com.template.evilgodxu.utils.localization.LocalizationManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,10 +29,10 @@ val appModule = module {
         }
     }
     single<SettingsRepository> { DataStoreSettingsRepository(get()) }
-    single { LocalizationManager(get(), get()) }
+    single { LocalizationManager(get()) }
     single { appVersionName(androidContext()) }
+    viewModelOf(::TemplateActivityViewModel)
     viewModelOf(::HomeViewModel)
-    viewModelOf(::SettingsViewModel)
 }
 
 // 应用版本号

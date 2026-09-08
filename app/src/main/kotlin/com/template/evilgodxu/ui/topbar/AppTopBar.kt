@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
-// 全局顶栏：稳定 API 实现，替代 material3 仍标记实验性的 TopAppBar（规范 3.3）
+// 全局顶栏：标题 + 可选返回键与尾部动作区
 @Composable
 fun AppTopBar(
     title: String,

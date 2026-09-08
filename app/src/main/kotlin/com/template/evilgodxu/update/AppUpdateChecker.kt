@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
  */
 object AppUpdateChecker {
 
-    /** 模板仓库 latest release 接口 */
+    /** GitHub Releases 最新版查询接口 */
     private const val LATEST_RELEASE_URL = "https://api.github.com/repos/Evilgodxu/android-template/releases/latest"
 
     private val json = Json { ignoreUnknownKeys = true }

@@ -29,9 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.core.view.drawToBitmap
 import androidx.core.view.WindowCompat
-import com.template.evilgodxu.data.repository.SettingsRepository
+import com.template.evilgodxu.LocalTemplateActivityViewModel
 import com.template.evilgodxu.data.settings.ThemeMode
-import org.koin.compose.koinInject
 
 class ThemeTransitionController {
     var request: ((Offset) -> Unit)? = null
@@ -128,10 +127,9 @@ fun MyApplicationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val settingsRepository = koinInject<SettingsRepository>()
-    val settings by settingsRepository.settings.collectAsStateWithLifecycle(initialValue = null)
+    val appUiState by LocalTemplateActivityViewModel.current.uiState.collectAsStateWithLifecycle()
 
-    val isDarkTheme = when (settings?.themeMode) {
+    val isDarkTheme = when (appUiState.themeMode) {
         ThemeMode.DARK -> true
         ThemeMode.LIGHT -> false
         else -> darkTheme

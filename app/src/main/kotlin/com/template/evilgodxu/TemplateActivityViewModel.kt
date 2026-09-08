@@ -1,5 +1,6 @@
-package com.template.evilgodxu.screens.settings
+package com.template.evilgodxu
 
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.template.evilgodxu.data.repository.SettingsRepository
@@ -11,17 +12,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-// 页面级 ViewModel：主题与语言由单一数据源（DataStore）驱动
-class SettingsViewModel(
+// 应用级（Activity 作用域）UI 状态持有者：以 DataStore 为单一事实源，聚合主题、语言与版本，
+// 供全局主题、本地化与各页面 UI 共同消费，UI 层不直连数据源。
+class TemplateActivityViewModel(
     private val settingsRepository: SettingsRepository,
-    private val appVersion: String,
+    appVersion: String,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SettingsUiState(version = appVersion))
-    val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(TemplateAppUiState(version = appVersion))
+    val uiState: StateFlow<TemplateAppUiState> = _uiState.asStateFlow()
 
     init {
-        // 主题与语言均由 DataStore 流驱动，写入后回流更新 UI
+        // 数据流回流更新 UI 状态，写入后经同一持有者广播
         viewModelScope.launch {
             settingsRepository.settings.collect { settings ->
                 _uiState.update { it.copy(themeMode = settings.themeMode) }
@@ -35,14 +37,15 @@ class SettingsViewModel(
     }
 
     fun setThemeMode(mode: ThemeMode) {
-        viewModelScope.launch {
-            settingsRepository.saveThemeMode(mode)
-        }
+        viewModelScope.launch { settingsRepository.saveThemeMode(mode) }
     }
 
     fun setLanguage(language: AppLanguage) {
-        viewModelScope.launch {
-            settingsRepository.setAppLanguage(language)
-        }
+        viewModelScope.launch { settingsRepository.setAppLanguage(language) }
     }
+}
+
+// 供界面树消费的 CompositionLocal，由宿主 Activity 提供
+val LocalTemplateActivityViewModel = staticCompositionLocalOf<TemplateActivityViewModel> {
+    error("TemplateActivityViewModel is not provided")
 }

@@ -1,9 +1,10 @@
-package com.template.evilgodxu.screens.settings
+package com.template.evilgodxu
 
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.ThemeMode
 
-data class SettingsUiState(
+// 应用级 UI 状态：聚合全局主题、语言与版本，供主题、本地化与各页面 UI 共同消费
+data class TemplateAppUiState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val language: AppLanguage = AppLanguage.SYSTEM,
     val version: String = "",

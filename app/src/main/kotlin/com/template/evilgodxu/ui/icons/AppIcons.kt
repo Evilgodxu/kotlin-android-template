@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.vector.addPathNodes
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
-// 本地 Material Symbols（outlined）图标：以 ImageVector 内置，替代 drawable 与 material-icons-extended
+// 本地内置的 Material Symbols（outlined）图标，以 ImageVector 声明
 object AppIcons {
     private fun icon(name: String, vararg pathData: String): ImageVector =
         ImageVector.Builder(

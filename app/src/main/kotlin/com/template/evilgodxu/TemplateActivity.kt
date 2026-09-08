@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -22,10 +23,12 @@ import com.template.evilgodxu.theme.MyApplicationTheme
 import com.template.evilgodxu.utils.localization.LocalizationManager
 import com.template.evilgodxu.utils.localization.ProvideLocalizedContext
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 // Activity 只做入口：挂载导航图与全局副作用，不持有状态字段、不参与业务
 class TemplateActivity : ComponentActivity() {
     private val localizationManager: LocalizationManager by inject()
+    private val activityViewModel: TemplateActivityViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +37,10 @@ class TemplateActivity : ComponentActivity() {
         setContent {
             // 全局副作用：按窗口方向显隐系统栏
             SystemBarsVisibilityEffect()
-            ProvideLocalizedContext(localizationManager) {
-                TemplateContent()
+            CompositionLocalProvider(LocalTemplateActivityViewModel provides activityViewModel) {
+                ProvideLocalizedContext(localizationManager) {
+                    TemplateContent()
+                }
             }
         }
     }

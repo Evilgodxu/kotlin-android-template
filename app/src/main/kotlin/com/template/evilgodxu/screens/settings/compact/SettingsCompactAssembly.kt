@@ -11,10 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.stringResource
+import com.template.evilgodxu.TemplateAppUiState
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.ThemeMode
-import com.template.evilgodxu.screens.settings.SettingsUiState
 import com.template.evilgodxu.screens.settings.component.content.SettingsContent
 import com.template.evilgodxu.ui.icons.AppIcons
 import com.template.evilgodxu.ui.topbar.AppTopBar
@@ -22,7 +22,7 @@ import com.template.evilgodxu.ui.topbar.AppTopBar
 // 设置页窄屏组装器：全宽单列布局
 @Composable
 fun SettingsCompactAssembly(
-    uiState: SettingsUiState,
+    uiState: TemplateAppUiState,
     onBack: () -> Unit,
     onThemeSelected: (ThemeMode) -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,

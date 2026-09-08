@@ -12,9 +12,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
+import com.template.evilgodxu.TemplateAppUiState
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.ThemeMode
-import com.template.evilgodxu.screens.settings.SettingsUiState
 import com.template.evilgodxu.screens.settings.component.appInfo.AppInfo
 import com.template.evilgodxu.screens.settings.component.appearance.Appearance
 import com.template.evilgodxu.screens.settings.component.appearance.ThemeSelectionDialog
@@ -24,7 +24,7 @@ import com.template.evilgodxu.screens.settings.component.language.LanguageSelect
 // 设置页内容单元：设置列表 + 弹窗状态，供各尺寸组装器复用
 @Composable
 fun SettingsContent(
-    uiState: SettingsUiState,
+    uiState: TemplateAppUiState,
     onThemeSelected: (ThemeMode) -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
     onThemeClick: (Offset) -> Unit,
