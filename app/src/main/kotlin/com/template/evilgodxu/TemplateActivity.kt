@@ -1,10 +1,8 @@
 package com.template.evilgodxu
 
 import android.app.Activity
-import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.LocaleList
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,29 +17,15 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.template.evilgodxu.data.repository.SettingsRepository
 import com.template.evilgodxu.navigation.AppNavHost
 import com.template.evilgodxu.theme.MyApplicationTheme
 import com.template.evilgodxu.utils.localization.LocalizationManager
 import com.template.evilgodxu.utils.localization.ProvideLocalizedContext
-import com.template.evilgodxu.utils.localization.toLocale
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 
 // Activity 只做入口：挂载导航图与全局副作用，不持有状态字段、不参与业务
 class TemplateActivity : ComponentActivity() {
     private val localizationManager: LocalizationManager by inject()
-    private val settingsRepository: SettingsRepository by inject()
-
-    // 冷启动按持久化语言创建配置上下文，进入界面即正确语言
-    override fun attachBaseContext(newBase: Context) {
-        val locale = runBlocking { settingsRepository.appLanguage.first() }.toLocale()
-        val config = Configuration(newBase.resources.configuration).apply {
-            setLocales(LocaleList(locale))
-        }
-        super.attachBaseContext(newBase.createConfigurationContext(config))
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

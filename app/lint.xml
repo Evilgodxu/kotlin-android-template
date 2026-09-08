@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  规范 3.5 落地要点：弃用 API（Deprecated）与 UnsafeOptIn 提级为 Error，
+  弃用 API（Deprecated）与 UnsafeOptIn 提级为 Error，
   abortOnError 开启时任一 Error 即阻断构建；禁止新增 baseline 压后处理。
 -->
 <lint>

@@ -44,14 +44,18 @@ object CrashLogManager : Thread.UncaughtExceptionHandler {
 
     /** 初始化日志系统，应在 Application.onCreate 最前面调用 */
     fun init(context: Context) {
-        logDir = File(context.getExternalFilesDir(null), LOG_DIR_NAME).apply { mkdirs() }
+        logDir = File(context.getExternalFilesDir(null), LOG_DIR_NAME)
         appContext = context.applicationContext
 
         // 链式接管默认处理器，保留系统默认崩溃流程
         previousHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler(this)
 
-        cleanOldLogs()
+        // 建目录与清理历史日志下沉到后台线程，避免阻塞冷启动主线程
+        logExecutor.execute {
+            logDir?.mkdirs()
+            cleanOldLogs()
+        }
     }
 
     /** 记录一般异常，标题为"类名: 描述" */
