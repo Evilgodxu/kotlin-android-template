@@ -22,7 +22,7 @@
 ## Features
 
 - **Single-Activity architecture** with Jetpack Compose + Material 3, edge-to-edge rendering, and per-orientation system-bar visibility
-- **MVVM with unidirectional data flow (UDF)** — each screen is driven by an immutable `UiState` exposed as a `StateFlow` by its `ViewModel`; events flow up, state flows down
+- **MVVM with unidirectional data flow (UDF)** — app-wide state (theme / language / version) is aggregated in an Activity-scoped `TemplateActivityViewModel` and consumed across the tree via a `CompositionLocal`; each screen adds its own immutable `UiState` exposed as a `StateFlow`. Events flow up, state flows down
 - **Atomic UI decomposition + adaptive assemblies** — the screen entry dispatches by window size class to a `CompactAssembly` / `ExpandedAssembly`, which composes self-contained, single-responsibility components from `component/`; components depend strictly downward and never couple back to the assembly
 - **Navigation3** with typed routes and an explicit back stack (double-back-to-exit on the root)
 - **Koin** dependency injection, started in `Application.onCreate`
@@ -93,6 +93,8 @@
 │       │   ├── utils/
 │       │   │   └── localization/        #   In-app localization manager
 │       │   ├── TemplateActivity.kt
+│       │   ├── TemplateActivityViewModel.kt   # Activity-scoped global UI state holder
+│       │   ├── TemplateAppUiState.kt          # App-level UI state
 │       │   └── TemplateApplication.kt
 │       └── res/                         # Resources (values / values-en)
 ├── gradle/
@@ -107,11 +109,11 @@
 
 ### State management — MVVM + UDF
 
-The app follows **MVVM with unidirectional data flow (UDF)**, forming a closed loop where state flows down and events flow up:
+The app follows **MVVM with unidirectional data flow (UDF)**, forming a closed loop where state flows down and events flow up. State is split across two tiers:
 
-- **View** (Composable) renders `UiState` and never mutates it directly.
-- **ViewModel** owns a `MutableStateFlow<UiState>` — the single source of UI truth — exposed as an immutable `StateFlow`, and receives user intents as plain methods (`setThemeMode`, `setLanguage`).
-- **Model** is the repository layer. `SettingsRepository` abstracts `DataStore Preferences`, which is the single source of truth for persisted settings; the repository is constructor-injected into the ViewModel via Koin (and swappable for tests).
+- **App-level global state** — `TemplateActivityViewModel` (Activity-scoped) aggregates app-wide UI state (`themeMode`, `language`, `version`) into the immutable `TemplateAppUiState`, exposed as a `StateFlow` and provided to the UI tree via the `LocalTemplateActivityViewModel` `CompositionLocal`. Theme, localization and screen UIs all consume this single source; the UI layer never touches the data source directly.
+- **Screen-level local state** — each screen's `{ScreenName}ViewModel` owns a `MutableStateFlow<{ScreenName}UiState>` as its single source of UI truth, exposed as an immutable `StateFlow` (e.g. `HomeViewModel` + `HomeUiState`).
+- **Model** — the repository layer. `SettingsRepository` abstracts `DataStore Preferences`, which is the single source of truth for persisted settings; it is constructor-injected via Koin (and swappable for tests). User intents are received as plain methods (`setThemeMode`, `setLanguage`) and written back through the repository.
 
 The typical flow: `DataStore → Repository → ViewModel → UiState → UI` for state, and the reverse path for events.
 

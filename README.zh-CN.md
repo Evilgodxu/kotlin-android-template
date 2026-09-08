@@ -22,7 +22,7 @@
 ## 特性
 
 - **单 Activity 架构**：基于 Jetpack Compose + Material 3，支持边到边（edge-to-edge）渲染，并按屏幕方向显隐系统栏
-- **MVVM + 单向数据流（UDF）**：每个页面由不可变的 `UiState` 驱动，经 `ViewModel` 以 `StateFlow` 暴露；事件自下而上、状态自上而下
+- **MVVM + 单向数据流（UDF）**：应用级状态（主题 / 语言 / 版本）由 Activity 作用域的 `TemplateActivityViewModel` 聚合，经 `CompositionLocal` 供界面树消费；各页面另以不可变 `UiState` 经 `StateFlow` 暴露。事件自下而上、状态自上而下
 - **原子化 UI 拆分 + 自适应组装器**：页面入口按窗口尺寸类分派到 `CompactAssembly` / `ExpandedAssembly`，由组装器组合 `component/` 下语义单一、自包含的组件；组件仅向下依赖、绝不反向耦合到组装器
 - **Navigation3 导航**：类型安全路由 + 显式返回栈（根页面支持双击返回退出）
 - **Koin 依赖注入**：在 `Application.onCreate` 中启动
@@ -93,6 +93,8 @@
 │       │   ├── utils/
 │       │   │   └── localization/        #   应用内多语言管理
 │       │   ├── TemplateActivity.kt
+│       │   ├── TemplateActivityViewModel.kt   # Activity 作用域全局 UI 状态持有者
+│       │   ├── TemplateAppUiState.kt          # 应用级 UI 状态
 │       │   └── TemplateApplication.kt
 │       └── res/                         # 资源（values / values-en）
 ├── gradle/
@@ -107,11 +109,11 @@
 
 ### 状态管理 —— MVVM + 单向数据流
 
-应用采用 **MVVM + 单向数据流（UDF）**，状态自上而下流动、事件自下而上传递，形成闭环：
+应用采用 **MVVM + 单向数据流（UDF）**，状态自上而下流动、事件自下而上传递，形成闭环。状态分两层管理：
 
-- **View（Composable）**：仅渲染 `UiState`，不直接改状态。
-- **ViewModel**：持有 `MutableStateFlow<UiState>` 作为 UI 唯一状态源，对外暴露不可变 `StateFlow`，并以普通方法接收用户意图（`setThemeMode`、`setLanguage`）。
-- **Model**：即仓库层。`SettingsRepository` 抽象了 `DataStore Preferences`，持久化设置以 DataStore 为唯一事实源；仓库经 Koin 构造注入 ViewModel，便于测试替换。
+- **应用级全局状态**：`TemplateActivityViewModel`（Activity 作用域）将应用级 UI 状态（`themeMode`、`language`、`version`）聚合进不可变的 `TemplateAppUiState`，以 `StateFlow` 暴露，并通过 `LocalTemplateActivityViewModel` `CompositionLocal` 提供给界面树；主题、本地化与各页面 UI 共同消费这一唯一状态源，UI 层不直连数据源。
+- **页面级局部状态**：每个页面的 `{ScreenName}ViewModel` 持有 `MutableStateFlow<{ScreenName}UiState>` 作为 UI 唯一状态源，对外暴露不可变 `StateFlow`（如 `HomeViewModel` + `HomeUiState`）。
+- **Model（仓库层）**：`SettingsRepository` 抽象了 `DataStore Preferences`，持久化设置以 DataStore 为唯一事实源，经 Koin 构造注入便于测试替换；用户意图以普通方法接收（`setThemeMode`、`setLanguage`），经仓库写回。
 
 典型流向：`DataStore → Repository → ViewModel → UiState → UI`（状态），事件则沿相反路径上行。
 
