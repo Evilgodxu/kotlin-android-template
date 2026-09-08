@@ -21,15 +21,15 @@
 
 ## 特性
 
-- **单 Activity 架构**：基于 Jetpack Compose + Material 3，支持边到边（edge-to-edge）渲染
-- **MVVM + 单向数据流**：每个页面由 `UiState` + `ViewModel` 驱动，状态自上而下、事件自下而上
-- **自适应组装器 + 语义组件**：页面按窗口尺寸类拆分为 `CompactAssembly` / `ExpandedAssembly`；页面组件位于 `component/`，直接语义命名、不加泛化后缀
-- **Navigation3 导航**：类型安全路由 + 显式返回栈
+- **单 Activity 架构**：基于 Jetpack Compose + Material 3，支持边到边（edge-to-edge）渲染，并按屏幕方向显隐系统栏
+- **MVVM + 单向数据流（UDF）**：每个页面由不可变的 `UiState` 驱动，经 `ViewModel` 以 `StateFlow` 暴露；事件自下而上、状态自上而下
+- **原子化 UI 拆分 + 自适应组装器**：页面入口按窗口尺寸类分派到 `CompactAssembly` / `ExpandedAssembly`，由组装器组合 `component/` 下语义单一、自包含的组件；组件仅向下依赖、绝不反向耦合到组装器
+- **Navigation3 导航**：类型安全路由 + 显式返回栈（根页面支持双击返回退出）
 - **Koin 依赖注入**：在 `Application.onCreate` 中启动
-- **DataStore Preferences 持久化**：统一管理应用设置
+- **DataStore Preferences 持久化**：作为仓库层背后的唯一数据源（single source of truth）
 - **主题模式**：跟随系统 / 浅色 / 深色，切换时带圆形扩散过渡动效
 - **应用内多语言**：简体中文 / English / 跟随系统，运行时热切换、无需重建 Activity（已禁用按语言分包，保证切换始终生效）
-- **崩溃日志管理**：未捕获异常与捕获异常写入应用专属外部目录，超期自动清理，并链式调用系统默认处理器；设置页可一键分享今日日志
+- **崩溃日志管理**：未捕获异常与捕获异常写入应用专属外部目录，并链式调用系统默认处理器；设置页可一键分享今日日志
 - **版本更新检查**：设置页查询 GitHub 最新 Release，发现新版本时提示
 - **构建优化**：Release 启用 R8 + 资源压缩、签名构建，仅打 `arm64-v8a` ABI，APK 输出命名固定
 
@@ -60,33 +60,44 @@
 ├── app/
 │   └── src/main/
 │       ├── kotlin/com/template/evilgodxu/
-│       │   ├── data/                    # 数据层（DataStore）
-│       │   │   ├── repository/          #   SettingsRepository
-│       │   │   └── settings/            #   设置状态与键
+│       │   ├── data/                    # 数据层（唯一数据源）
+│       │   │   ├── repository/          #   SettingsRepository 契约 + DataStore 实现
+│       │   │   └── settings/            #   设置键、枚举与状态
 │       │   ├── di/                      # Koin 模块
-│       │   ├── log/                     # 崩溃日志管理
-│       │   ├── navigation/              # Navigation3 类型安全路由
+│       │   ├── log/                     # 崩溃与异常日志（CrashLogManager）
+│       │   ├── navigation/              # Navigation3 类型安全路由 + 导航宿主
 │       │   ├── screens/                 # 页面模块
 │       │   │   ├── home/                #   首页
-│       │   │   │   ├── compact/         #   窄屏组装器
-│       │   │   │   ├── expanded/        #   宽屏组装器
-│       │   │   │   └── component/       #   欢迎 / 项目简介卡片
+│       │   │   │   ├── compact/         #     窄屏组装器
+│       │   │   │   ├── expanded/        #     宽屏组装器
+│       │   │   │   └── component/       #     语义组件
+│       │   │   │       ├── welcome/     #       欢迎卡片
+│       │   │   │       └── about/       #       项目简介卡片
 │       │   │   └── settings/            #   设置页
-│       │   │       ├── compact/         #   窄屏组装器
-│       │   │       ├── expanded/        #   宽屏组装器
-│       │   │       ├── component/       #   外观 / 语言 / 关于
-│       │   │       └── dialog/          #   选择弹窗
+│       │   │       ├── compact/         #     窄屏组装器
+│       │   │       ├── expanded/        #     宽屏组装器
+│       │   │       └── component/       #     语义组件
+│       │   │           ├── content/     #       页面内容单元（各尺寸组装器复用）
+│       │   │           ├── appearance/  #       外观设置项 + 主题选择弹窗
+│       │   │           ├── language/    #       语言设置项 + 语言选择弹窗
+│       │   │           ├── appInfo/     #       关于 / 版本 / 检查更新
+│       │   │           └── clickableItem/ #    可点击设置行
 │       │   ├── theme/                   # Material 3 配色与字体
-│       │   ├── ui/                      # 共享 UI（顶栏 / 区块卡片 / 窗口尺寸）
+│       │   ├── ui/                      # 共享 UI
+│       │   │   ├── icons/               #   矢量图标
+│       │   │   ├── section/             #   区块卡片容器（SectionCard）
+│       │   │   ├── topbar/              #   应用顶栏（AppTopBar）
+│       │   │   ├── windowSize/          #   窗口尺寸类
+│       │   │   └── dialog/              #   单选弹窗（SingleChoiceDialog）
 │       │   ├── update/                  # 最新版本检查（GitHub API）
-│       │   ├── utils/localization/      # 应用内多语言管理
+│       │   ├── utils/
+│       │   │   └── localization/        #   应用内多语言管理
 │       │   ├── TemplateActivity.kt
 │       │   └── TemplateApplication.kt
 │       └── res/                         # 资源（values / values-en）
 ├── gradle/
 │   ├── libs.versions.toml               # 版本目录（依赖管理）
 │   └── wrapper/
-├── docs/                                # 架构说明
 ├── build.gradle.kts
 ├── settings.gradle.kts
 └── gradle.properties
@@ -94,15 +105,25 @@
 
 ## 架构
 
-应用采用 **MVVM + 单向数据流**：状态由 `ViewModel` → `UiState` → UI 自上而下流动，事件由 UI 自下而上传递；共享数据逻辑位于 `data/` 层并通过 Repository 暴露，全部由 Koin 组装。
+### 状态管理 —— MVVM + 单向数据流
 
-代码遵循 **按窗口尺寸类拆分的模块化模式**：
+应用采用 **MVVM + 单向数据流（UDF）**，状态自上而下流动、事件自下而上传递，形成闭环：
 
-- `{ScreenName}Screen.kt` — 页面入口，负责将 ViewModel 与 UI 关联，并按尺寸类分发
-- `{ScreenName}CompactAssembly.kt` / `{ScreenName}ExpandedAssembly.kt` — 窄屏 / 宽屏自适应组装器
-- `component/` 下的 `{Name}.kt` — 语义单一、自包含的 UI 组件，直接语义命名、不加泛化后缀
+- **View（Composable）**：仅渲染 `UiState`，不直接改状态。
+- **ViewModel**：持有 `MutableStateFlow<UiState>` 作为 UI 唯一状态源，对外暴露不可变 `StateFlow`，并以普通方法接收用户意图（`setThemeMode`、`setLanguage`）。
+- **Model**：即仓库层。`SettingsRepository` 抽象了 `DataStore Preferences`，持久化设置以 DataStore 为唯一事实源；仓库经 Koin 构造注入 ViewModel，便于测试替换。
 
-通用能力（`data/`、`theme/`、`utils/`）被两个及以上页面复用时上提至顶层；仅单页使用的代码保留在页面模块内。
+典型流向：`DataStore → Repository → ViewModel → UiState → UI`（状态），事件则沿相反路径上行。
+
+### UI 组合 —— 原子化拆分 + 自适应组装
+
+代码遵循 **按窗口尺寸类拆分的模块化模式**（对齐 Material 自适应指南）：
+
+- `{ScreenName}Screen.kt` —— 轻量页面入口：提升（hoist）状态与事件、按窗口尺寸类分派到组装器，并承载跨形态副作用，**不含布局代码**。
+- `{ScreenName}CompactAssembly.kt` / `{ScreenName}ExpandedAssembly.kt` —— 负责页面级布局骨架（Scaffold、顶栏、滚动容器），并**组装可复用的原子组件**。显示形态由窗口尺寸类与屏幕旋转状态共同决定，避免 `if` 式布局分支。
+- `component/<语义名>/` —— 原子化、单一职责的 UI 单元（`Welcome`、`About`、`Appearance`、`AppInfo` 等），按语义命名而非泛化后缀。依赖严格向下：组装器可组合组件，组件绝不反向组合进组装器，组件树因此保持解耦。
+
+通用能力被两个及以上页面复用时上提至顶层（`data/`、`ui/`、`theme/`、`utils/`、`log/`、`update/`、`di/`）；仅单页使用的代码保留在页面模块内。
 
 ## 快速开始
 

@@ -21,15 +21,15 @@
 
 ## Features
 
-- **Single-Activity architecture** with Jetpack Compose + Material 3, edge-to-edge rendering
-- **MVVM with unidirectional data flow** — `UiState` + `ViewModel` per screen
-- **Adaptive assemblies + semantic components** — screens are composed by `CompactAssembly` / `ExpandedAssembly` per window size class; page components live in `component/` with descriptive, suffix-free names
-- **Navigation3** with typed routes and an explicit back stack
+- **Single-Activity architecture** with Jetpack Compose + Material 3, edge-to-edge rendering, and per-orientation system-bar visibility
+- **MVVM with unidirectional data flow (UDF)** — each screen is driven by an immutable `UiState` exposed as a `StateFlow` by its `ViewModel`; events flow up, state flows down
+- **Atomic UI decomposition + adaptive assemblies** — the screen entry dispatches by window size class to a `CompactAssembly` / `ExpandedAssembly`, which composes self-contained, single-responsibility components from `component/`; components depend strictly downward and never couple back to the assembly
+- **Navigation3** with typed routes and an explicit back stack (double-back-to-exit on the root)
 - **Koin** dependency injection, started in `Application.onCreate`
-- **DataStore Preferences** persistence for app settings
+- **DataStore Preferences** persistence as the single source of truth behind a repository
 - **Theme modes** — System / Light / Dark, with a circular reveal transition animation when switching
 - **In-app language switching** — 简体中文 / English / Follow System, hot-swapped at runtime without recreating the Activity (per-language resource bundles disabled so switching always works)
-- **Crash log manager** — uncaught and caught exceptions written to app-specific external storage, auto-cleaned after a retention period, chaining to the system default handler; today's log can be shared from the Settings page
+- **Crash log manager** — uncaught and caught exceptions written to app-specific external storage, chaining to the system default handler; today's log can be shared from the Settings page
 - **Version update check** — the Settings page queries the latest GitHub release and prompts when a newer version is available
 - **Optimized build setup** — R8 + resource shrinking for release, signed release build, `arm64-v8a`-only ABI filter, deterministic APK naming
 
@@ -60,33 +60,44 @@
 ├── app/
 │   └── src/main/
 │       ├── kotlin/com/template/evilgodxu/
-│       │   ├── data/                    # Data layer (DataStore)
-│       │   │   ├── repository/          #   SettingsRepository
-│       │   │   └── settings/            #   Settings state & keys
+│       │   ├── data/                    # Data layer (single source of truth)
+│       │   │   ├── repository/          #   SettingsRepository contract + DataStore impl
+│       │   │   └── settings/            #   Settings keys, enums & state
 │       │   ├── di/                      # Koin modules
-│       │   ├── log/                     # CrashLogManager
-│       │   ├── navigation/              # Navigation3 typed routes
+│       │   ├── log/                     # CrashLogManager (crash & exception logging)
+│       │   ├── navigation/              # Navigation3 typed routes + NavHost
 │       │   ├── screens/                 # Feature modules
 │       │   │   ├── home/                #   Home feature
-│       │   │   │   ├── compact/         #     Narrow-screen assembly
-│       │   │   │   ├── expanded/        #     Wide-screen assembly
-│       │   │   │   └── component/       #     Welcome / About cards
+│       │   │   │   ├── compact/         #     Narrow-window assembly
+│       │   │   │   ├── expanded/        #     Wide-window assembly
+│       │   │   │   └── component/       #     Semantic components
+│       │   │   │       ├── welcome/     #       Welcome card
+│       │   │   │       └── about/       #       About card
 │       │   │   └── settings/            #   Settings feature
-│       │   │       ├── compact/         #     Narrow-screen assembly
-│       │   │       ├── expanded/        #     Wide-screen assembly
-│       │   │       ├── component/       #     Appearance / Language / AppInfo
-│       │   │       └── dialog/          #     Selection dialogs
-│       │   ├── theme/                   # Material 3 color & typography
-│       │   ├── ui/                      # Shared UI (topbar / section card / window size)
+│       │   │       ├── compact/         #     Narrow-window assembly
+│       │   │       ├── expanded/        #     Wide-window assembly
+│       │   │       └── component/       #     Semantic components
+│       │   │           ├── content/     #       Screen content (shared by assemblies)
+│       │   │           ├── appearance/  #       Theme item + selection dialog
+│       │   │           ├── language/    #       Language item + selection dialog
+│       │   │           ├── appInfo/     #       About / version / update check
+│       │   │           └── clickableItem/ #   Clickable settings row
+│       │   ├── theme/                   # Material 3 color scheme & typography
+│       │   ├── ui/                      # Shared UI
+│       │   │   ├── icons/               #   Vector icons
+│       │   │   ├── section/             #   SectionCard container
+│       │   │   ├── topbar/              #   AppTopBar
+│       │   │   ├── windowSize/          #   Window size classes
+│       │   │   └── dialog/              #   SingleChoiceDialog
 │       │   ├── update/                  # Latest-release check (GitHub API)
-│       │   ├── utils/localization/      # In-app localization manager
+│       │   ├── utils/
+│       │   │   └── localization/        #   In-app localization manager
 │       │   ├── TemplateActivity.kt
 │       │   └── TemplateApplication.kt
 │       └── res/                         # Resources (values / values-en)
 ├── gradle/
 │   ├── libs.versions.toml               # Version catalog (dependencies)
 │   └── wrapper/
-├── docs/                                # Architecture notes
 ├── build.gradle.kts
 ├── settings.gradle.kts
 └── gradle.properties
@@ -94,15 +105,25 @@
 
 ## Architecture
 
-The app follows **MVVM with unidirectional data flow**: state flows down from `ViewModel` → `UiState` → UI, while events flow up from the UI to the `ViewModel`. Shared data logic lives in the `data/` layer behind a repository, and everything is wired together by Koin.
+### State management — MVVM + UDF
 
-Code is organized with a **modular pattern driven by window size classes**:
+The app follows **MVVM with unidirectional data flow (UDF)**, forming a closed loop where state flows down and events flow up:
 
-- `{ScreenName}Screen.kt` — screen entry, wires the ViewModel to the UI and dispatches by size class
-- `{ScreenName}CompactAssembly.kt` / `{ScreenName}ExpandedAssembly.kt` — adaptive assemblies for narrow / wide windows
-- `{Name}.kt` under `component/` — a self-contained UI block with a single semantic responsibility, named without generic suffixes
+- **View** (Composable) renders `UiState` and never mutates it directly.
+- **ViewModel** owns a `MutableStateFlow<UiState>` — the single source of UI truth — exposed as an immutable `StateFlow`, and receives user intents as plain methods (`setThemeMode`, `setLanguage`).
+- **Model** is the repository layer. `SettingsRepository` abstracts `DataStore Preferences`, which is the single source of truth for persisted settings; the repository is constructor-injected into the ViewModel via Koin (and swappable for tests).
 
-Shared code is promoted to the top level (`data/`, `theme/`, `utils/`) when reused by more than one feature; feature-specific code stays inside the feature module.
+The typical flow: `DataStore → Repository → ViewModel → UiState → UI` for state, and the reverse path for events.
+
+### UI composition — atomic decomposition + adaptive assemblies
+
+Code is organized with a **modular pattern driven by window size classes**, mirroring Material's adaptive guidance:
+
+- `{ScreenName}Screen.kt` — a thin screen entry that hoists state and events, dispatches to an assembly by window size class, and hosts cross-form effects. It contains **no layout code**.
+- `{ScreenName}CompactAssembly.kt` / `{ScreenName}ExpandedAssembly.kt` — own screen-level layout scaffolding (Scaffold, top bar, scroll container) and **assemble reusable atomic components**. The displayed form is decided jointly by window size class and screen rotation state; `if`-based layout branching is avoided.
+- `component/<semantic-name>/` — atomic, single-responsibility UI units (`Welcome`, `About`, `Appearance`, `AppInfo`, …) named by semantics rather than generic suffixes. Dependencies point strictly downward: an assembly may compose components, but a component never composes back into an assembly, so the tree stays uncoupled.
+
+Shared cross-feature code is hoisted to the top level (`data/`, `ui/`, `theme/`, `utils/`, `log/`, `update/`, `di/`); code used by a single feature stays inside that feature module.
 
 ## Getting Started
 
@@ -145,7 +166,7 @@ The keystore file is expected at `jh.keystore` in the project root (adjust `stor
 - **App name**: edit `app_name` in `app/src/main/res/values/strings.xml`.
 - **Theme colors**: edit `app/src/main/kotlin/.../theme/Color.kt`.
 - **Supported ABIs**: adjust `ndk.abiFilters` in `app/build.gradle.kts` (currently `arm64-v8a`).
-- **Add a new screen**: create a `screens/<name>/` feature module with its `UiState` + `ViewModel` + `Compact`/`Expanded` assemblies and semantic components under `component/`, register the route in `navigation/Screen.kt`, and add it to `AppNavHost`.
+- **Add a new screen**: create a `screens/<name>/` feature module with its `UiState` + `ViewModel` + `Compact`/`Expanded` assemblies and atomic components under `component/`, register the route in `navigation/Screen.kt`, and add it to `AppNavHost`.
 
 ## License
 
