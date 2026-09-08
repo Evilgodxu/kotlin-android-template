@@ -1,4 +1,4 @@
-package com.template.evilgodxu.screens.settings.dialog
+package com.template.evilgodxu.screens.settings.component.language
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource

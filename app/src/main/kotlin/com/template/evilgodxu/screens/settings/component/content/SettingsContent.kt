@@ -17,9 +17,9 @@ import com.template.evilgodxu.data.settings.ThemeMode
 import com.template.evilgodxu.screens.settings.SettingsUiState
 import com.template.evilgodxu.screens.settings.component.appInfo.AppInfo
 import com.template.evilgodxu.screens.settings.component.appearance.Appearance
+import com.template.evilgodxu.screens.settings.component.appearance.ThemeSelectionDialog
 import com.template.evilgodxu.screens.settings.component.language.Language
-import com.template.evilgodxu.screens.settings.dialog.LanguageSelectionDialog
-import com.template.evilgodxu.screens.settings.dialog.ThemeSelectionDialog
+import com.template.evilgodxu.screens.settings.component.language.LanguageSelectionDialog
 
 // 设置页内容单元：设置列表 + 弹窗状态，供各尺寸组装器复用
 @Composable
