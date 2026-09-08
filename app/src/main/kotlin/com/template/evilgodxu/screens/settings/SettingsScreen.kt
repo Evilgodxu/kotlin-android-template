@@ -24,18 +24,22 @@ fun SettingsScreen(
     when (rememberWindowSizeClass()) {
         WindowSizeClass.Compact -> SettingsCompactAssembly(
             uiState = appUiState,
+            updateCheck = activityViewModel.updateCheck,
             onBack = onBack,
             onThemeSelected = activityViewModel::setThemeMode,
             onLanguageSelected = activityViewModel::setLanguage,
             onThemeClick = onThemeClick,
+            onCheckForUpdate = activityViewModel::checkForUpdate,
             modifier = modifier,
         )
         WindowSizeClass.Medium, WindowSizeClass.Expanded -> SettingsExpandedAssembly(
             uiState = appUiState,
+            updateCheck = activityViewModel.updateCheck,
             onBack = onBack,
             onThemeSelected = activityViewModel::setThemeMode,
             onLanguageSelected = activityViewModel::setLanguage,
             onThemeClick = onThemeClick,
+            onCheckForUpdate = activityViewModel::checkForUpdate,
             modifier = modifier,
         )
     }

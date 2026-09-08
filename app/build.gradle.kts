@@ -150,11 +150,9 @@ dependencies {
 
     // 依赖注入 Koin（在 Application.onCreate 中手动启动）
     implementation(libs.koin.android)
-    implementation(libs.koin.androidx.compose)
     implementation(libs.koin.core)
 
     // 键值存储 DataStore
-    implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.preferences)
 
     // Kotlin Serialization

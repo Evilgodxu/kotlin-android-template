@@ -12,21 +12,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.stringResource
 import com.template.evilgodxu.TemplateAppUiState
+import com.template.evilgodxu.UpdateCheckOutcome
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.ThemeMode
 import com.template.evilgodxu.screens.settings.component.content.SettingsContent
 import com.template.evilgodxu.ui.icons.AppIcons
 import com.template.evilgodxu.ui.topbar.AppTopBar
+import kotlinx.coroutines.flow.StateFlow
 
 // 设置页窄屏组装器：全宽单列布局
 @Composable
 fun SettingsCompactAssembly(
     uiState: TemplateAppUiState,
+    updateCheck: StateFlow<UpdateCheckOutcome?>,
     onBack: () -> Unit,
     onThemeSelected: (ThemeMode) -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
     onThemeClick: (Offset) -> Unit,
+    onCheckForUpdate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -45,9 +49,11 @@ fun SettingsCompactAssembly(
     ) { innerPadding ->
         SettingsContent(
             uiState = uiState,
+            updateCheck = updateCheck,
             onThemeSelected = onThemeSelected,
             onLanguageSelected = onLanguageSelected,
             onThemeClick = onThemeClick,
+            onCheckForUpdate = onCheckForUpdate,
             modifier = Modifier
                 .fillMaxSize()
                 .consumeWindowInsets(innerPadding)

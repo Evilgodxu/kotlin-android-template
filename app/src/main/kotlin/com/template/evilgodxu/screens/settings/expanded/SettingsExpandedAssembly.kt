@@ -17,21 +17,25 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.template.evilgodxu.TemplateAppUiState
+import com.template.evilgodxu.UpdateCheckOutcome
 import com.template.evilgodxu.R
 import com.template.evilgodxu.data.settings.AppLanguage
 import com.template.evilgodxu.data.settings.ThemeMode
 import com.template.evilgodxu.screens.settings.component.content.SettingsContent
 import com.template.evilgodxu.ui.icons.AppIcons
 import com.template.evilgodxu.ui.topbar.AppTopBar
+import kotlinx.coroutines.flow.StateFlow
 
 // 设置页宽屏组装器：内容限宽居中，避免宽屏下过度拉伸
 @Composable
 fun SettingsExpandedAssembly(
     uiState: TemplateAppUiState,
+    updateCheck: StateFlow<UpdateCheckOutcome?>,
     onBack: () -> Unit,
     onThemeSelected: (ThemeMode) -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
     onThemeClick: (Offset) -> Unit,
+    onCheckForUpdate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -56,9 +60,11 @@ fun SettingsExpandedAssembly(
         ) {
             SettingsContent(
                 uiState = uiState,
+                updateCheck = updateCheck,
                 onThemeSelected = onThemeSelected,
                 onLanguageSelected = onLanguageSelected,
                 onThemeClick = onThemeClick,
+                onCheckForUpdate = onCheckForUpdate,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .fillMaxWidth()

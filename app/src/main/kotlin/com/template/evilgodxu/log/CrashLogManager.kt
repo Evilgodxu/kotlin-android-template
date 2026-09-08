@@ -44,7 +44,8 @@ object CrashLogManager : Thread.UncaughtExceptionHandler {
 
     /** 初始化日志系统，应在 Application.onCreate 最前面调用 */
     fun init(context: Context) {
-        logDir = File(context.getExternalFilesDir(null), LOG_DIR_NAME)
+        // getExternalFilesDir 理论可能为空，空时保持 logDir 为 null，写入路径统一降级到系统日志
+        logDir = context.getExternalFilesDir(null)?.let { File(it, LOG_DIR_NAME) }
         appContext = context.applicationContext
 
         // 链式接管默认处理器，保留系统默认崩溃流程

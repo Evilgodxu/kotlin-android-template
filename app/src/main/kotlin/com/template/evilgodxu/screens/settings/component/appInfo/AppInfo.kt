@@ -14,7 +14,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,14 +27,11 @@ import androidx.core.net.toUri
 import com.template.evilgodxu.R
 import com.template.evilgodxu.log.CrashLogManager
 import com.template.evilgodxu.ui.icons.AppIcons
-import com.template.evilgodxu.update.AppUpdateChecker
-import kotlinx.coroutines.launch
 
-// 关于：应用信息与版本
+// 关于：应用信息与版本；版本点击触发检查由上层（ViewModel）驱动
 @Composable
-fun AppInfo(version: String) {
+fun AppInfo(version: String, onCheckForUpdate: () -> Unit) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,7 +50,7 @@ fun AppInfo(version: String) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 2.dp)
-                .clickable { scope.launch { checkUpdate(context, version) } },
+                .clickable(onClick = onCheckForUpdate),
             textAlign = TextAlign.Center,
             fontSize = 13.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
@@ -119,18 +115,6 @@ private fun shareTodayLog(context: Context) {
     // 本地化上下文非 Activity，启动外部 Activity 需 NEW_TASK 标志
     val chooser = Intent.createChooser(shareIntent, context.getString(R.string.settings_share_log_title))
     context.startActivity(chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-}
-
-/** 查询线上最新版本并与当前版本比较，以 Toast 反馈检查结果 */
-private suspend fun checkUpdate(context: Context, currentVersion: String) {
-    val latest = AppUpdateChecker.fetchLatestVersion()
-    val message = when {
-        latest == null -> context.getString(R.string.settings_update_failed)
-        !AppUpdateChecker.hasNewVersion(latest, currentVersion) ->
-            context.getString(R.string.settings_update_latest)
-        else -> context.getString(R.string.settings_update_available, latest)
-    }
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 private const val GITHUB_URL = "https://github.com/Evilgodxu/android-template"
